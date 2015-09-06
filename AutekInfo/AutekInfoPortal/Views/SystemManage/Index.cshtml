@@ -1,0 +1,304 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/jquery-easyui-1.4.3/themes/default/css")
+    @Styles.Render("~/Content/autek/Style/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/blockUI")
+    @Scripts.Render("~/bundles/homemenu")
+    <title>Index</title>
+    <script type="text/javascript">
+        $(function () {
+            $.post(
+                '/SystemManage/GetO',
+                function (data) {
+                    $('#depttree').tree({
+                        data: data,
+                        dnd: true,
+                        animate: true,
+                        onClick: function (node) {
+                            $('#depttree').tree('toggle', node.target);
+                        },
+                        onBeforeDrop: function (target, source, point) {
+                            console.info(point);
+                            $.messager.confirm('提示', '你确定要这样调整吗？', function (r) {
+                                if (r) {
+                                    sourceid = source.id;
+                                    targetid = $('#depttree').tree('getNode', target).id;
+                                    ChangeOchar(sourceid, targetid, point);
+                                }
+                            });
+                            return false;
+                        }
+                    })
+                },
+                'json'
+                )
+        })
+        function ChangeOchar(sourceid, targetid, point) {
+            $.post(
+               '/SystemManage/ChangeDeptOchar',
+               {
+                   'sourceid': sourceid,
+                   'targetid': targetid,
+                   'point': point
+               }, function (r) {
+                   if (r.length > 0) {
+                       $('#depttree').tree('loadData', r);
+                       ExptendToID(sourceid);
+                       parent.$.messager.show({
+                           title: '系统消息',
+                           msg: '更新成功！',
+                           timeout: 2000,
+                           showType: 'slide'
+                       });
+                   } else {
+                       $.messager.alert("错误", "更新失败！", "warning");
+                   }
+               }, 'json'
+                )
+        }
+        function ExptendToID(id) {
+            var node = $('#depttree').tree('find', id);
+            $('#depttree').tree('expandTo', node.target);
+        }
+
+        function adddept() {
+            $('#window_dept').show().dialog({
+                title: '增加部门',
+                iconCls: 'pic pic_34',
+                closable: true,
+                width: 400,
+                height: 400,
+                closed: false,
+                cache: false,
+                modal: true,
+                draggable: false,
+                buttons: [{
+                    text: '提交',
+                    iconCls: 'pic pic_35',
+                    handler: function () {
+                        if ($('#frmdept').form('validate') && $('#d_pid').combobox('getText') != '-请选择-') {
+                            $('#window_dept').block({
+                                message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
+                                css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
+                            });
+                            $.post(
+                            '/SystemManage/AddDept',
+                            $("#frmdept").serialize(),
+                            function (r) {
+                                if (r >0) {
+                                    $('#window_dept').unblock();
+                                    parent.$.messager.show({
+                                        title: '提示',
+                                        msg: '增加成功！',
+                                        timeout: 5000,
+                                        showType: 'slide'
+                                    });
+                                    //$('#window_dept').panel('close');
+                                    parent.$("#tab_menu-tabrefresh").trigger("click");
+                                } else if (r == -1) {
+                                    $('#window_dept').unblock();
+                                    $.messager.alert('警告', '部门名称或部门代码重复！', 'error');
+                                } else {
+                                    $.messager.alert('警告', '新增失败！' + r, 'error');
+                                }
+                            }, 'text');
+                        } else {
+                            $.messager.alert('警告', '请检查输入是否正确！', 'error');
+                            return;
+                        }
+                    }
+                }],
+                onOpen: function () {
+                    $('#d_pid').combobox({
+                        url: '/SystemManage/GetAllDept',
+                        editable: false,
+                        valueField: 'dept_id',
+                        textField: 'dept_name'
+                    });
+                }
+            });
+
+
+        }
+        function deldept() {
+            var node = $('#depttree').tree('getSelected');
+            if (node == null) {
+                $.messager.alert("提示", "未选择任何部门！", "info");
+                return;
+            }
+            
+            
+            if (!$('#depttree').tree('isLeaf', node.target)) {
+                $.messager.alert("提示", "该部门下面还有子部门，请先移动或删除！", "info");
+                return;
+            }
+            $.messager.confirm('提示', '确定要删除吗？', function (r) {
+                if (r) {
+                    $.blockUI({
+                        message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
+                        css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
+                    });
+                    $.post(
+                '/SystemManage/DelDept',
+                {
+                    'dept_id': node.id
+                }, function (r) {
+                    if (r=='True') {
+                        $.unblockUI();
+                        parent.$.messager.show({
+                            title: '系统消息',
+                            msg: '删除成功！',
+                            timeout: 2000,
+                            showType: 'slide'
+                        });
+                        parent.$("#tab_menu-tabrefresh").trigger("click");
+                    } else {
+                        $.unblockUI();
+                        $.messager.alert("错误", "删除失败！", "warning");
+                    }
+                }, 'text'
+                 )
+                }
+            });
+        }
+        function chgdept() {
+            var node = $('#depttree').tree('getSelected');
+           // console.info(node);
+            if (node == null) {
+                $.messager.alert("提示", "未选择任何部门！", "info");
+                return;
+            }
+            
+                $('#window_dept').show().dialog({
+                    title: '修改部门',
+                    iconCls: 'pic pic_95',
+                    closable: true,
+                    width: 400,
+                    height: 400,
+                    closed: false,
+                    cache: false,
+                    modal: true,
+                    draggable: false,
+                    buttons: [{
+                        text: '提交',
+                        iconCls: 'pic pic_35',
+                        handler: function () {
+                            var deptpid = $('#d_pid').combobox('getValue');
+                            if (deptpid == node.id) {
+                                $.messager.alert('提示', '上级部门不能是自己！', 'info');
+                                return;
+                            }
+                            if ($('#frmdept').form('validate')) {
+                                $('#window_dept').block({
+                                    message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
+                                    css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
+                                });
+                                $.post(
+                                '/SystemManage/ChgDept?dept_id=' + node.id,
+                                $("#frmdept").serialize(),
+                                function (r) {
+                                    if (r=='True') {
+                                        $('#window_dept').unblock();
+                                        parent.$.messager.show({
+                                            title: '提示',
+                                            msg: '修改成功！',
+                                            timeout: 5000,
+                                            showType: 'slide'
+                                        });
+                                        //$('#window_dept').panel('close');
+                                        parent.$("#tab_menu-tabrefresh").trigger("click");
+                                    } else if (r == 'False') {
+                                        $('#window_dept').unblock();
+                                        $.messager.alert('警告', '部门名称或部门代码重复！', 'error');
+                                    } else {
+                                        $.messager.alert('警告', '修改失败！' + r, 'error');
+                                    }
+                                }, 'text');
+                            } else {
+                                $.messager.alert('警告', '请检查输入是否正确！', 'error');
+                                return;
+                            }
+                        }
+                    }],
+                    onOpen: function () {
+                        $('#d_pid').combobox({
+                            url: '/SystemManage/GetAllDept',
+                            editable: false,
+                            valueField: 'dept_id',
+                            textField: 'dept_name'
+                        });
+                        $.post(
+                                '/SystemManage/GetDept?dept_id=' + node.id,
+                                function (r) {
+                                    $('#d_name').val(r.dept_name);
+                                    $('#d_code').val(r.dept_code);
+                                    $('#d_pid').combobox('setValue', r.dept_pid);
+                                    $('#d_order').numberbox('setValue', r.dept_order);
+                                }, 'json'
+                                )
+                        
+                    }
+                });
+        }
+        function finddept() {
+            var text = $('#searchbox').textbox('getValue');
+            if (text.length > 0) {
+                $.post(
+                                '/SystemManage/GetDept?dept_name=' + text,
+                                function (r) {
+                                    if (r) {
+                                        var node = $('#depttree').tree('find',  r.dept_id);
+                                        $('#depttree').tree('expandTo', node.target);
+                                    } else {
+                                        $.messager.alert('提示', '没有查到结果！', 'info');
+                                        return;
+                                    }
+                                }, 'json'
+                                )
+            }}
+    </script>
+</head>
+<body>
+    <div>
+        <a id="adddept" href="javascript:adddept()" class="easyui-linkbutton" data-options="iconCls:'pic pic_34'">新建部门</a>
+        <a id="deldept" href="javascript:deldept()" class="easyui-linkbutton" data-options="iconCls:'pic pic_119'">删除部门</a>
+        <a id="chgdept" href="javascript:chgdept()" class="easyui-linkbutton" data-options="iconCls:'pic pic_95'">修改部门</a>
+        <input id="searchbox" class="easyui-textbox" data-options="iconCls:'icon-search'" style="width:300px"><a id="finddept" href="javascript:finddept()" class="easyui-linkbutton" data-options="">快速查找</a>
+    </div>
+    <br />
+    <div>
+        <ul id="depttree"></ul>
+    </div>
+    <div id="window_dept" style="display:none;padding:5px;">
+        <form id="frmdept" method="post">
+            <table>
+                <tr>
+                    <td>部门名称：</td>
+                    <td><input id="d_name" name="d_name" class="easyui-validatebox" data-options="required:true" style="width:200px;"></td>
+                </tr>
+                <tr>
+                    <td>部门代码：</td>
+                    <td><input id="d_code" name="d_code" class="easyui-validatebox" data-options="required:true" style="width:200px;"></td>
+                </tr>
+                <tr>
+                    <td>上级部门：</td>
+                    <td><input id="d_pid" name="d_pid" style="width:200px;" value="-请选择-"></td>
+                </tr>
+                <tr>
+                    <td>部门排序：</td>
+                    <td><input id="d_order" name="d_order" class="easyui-numberbox" value="0" data-options="required:true,min:0,max:100" style="width:200px;"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+</body>
+</html>

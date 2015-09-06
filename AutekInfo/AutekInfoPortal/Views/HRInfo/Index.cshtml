@@ -1,0 +1,30 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/jquery-easyui-1.4.3/themes/default/css")
+    @Styles.Render("~/Content/autek/Style/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/blockUI")
+    @Scripts.Render("~/bundles/homemenu")
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        <h1>你好</h1>
+
+        @{
+            Session["name"].ToString();
+            <h2>
+                这是待开发的页面....
+
+            </h2>
+        }
+       </div>
+</body>
+</html>
