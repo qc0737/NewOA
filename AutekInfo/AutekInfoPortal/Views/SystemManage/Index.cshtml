@@ -26,7 +26,6 @@
                             $('#depttree').tree('toggle', node.target);
                         },
                         onBeforeDrop: function (target, source, point) {
-                            console.info(point);
                             $.messager.confirm('提示', '你确定要这样调整吗？', function (r) {
                                 if (r) {
                                     sourceid = source.id;
@@ -117,6 +116,7 @@
                     }
                 }],
                 onOpen: function () {
+                    $("#frmdept").form('clear');
                     $('#d_pid').combobox({
                         url: '/SystemManage/GetAllDept',
                         editable: false,
@@ -171,7 +171,6 @@
         }
         function chgdept() {
             var node = $('#depttree').tree('getSelected');
-           // console.info(node);
             if (node == null) {
                 $.messager.alert("提示", "未选择任何部门！", "info");
                 return;
