@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using Newtonsoft.Json;
+using AutekInfo;
 namespace AutekInfoPortal.Controllers
 {
     public class HRInfoController : Controller
@@ -13,7 +15,11 @@ namespace AutekInfoPortal.Controllers
 
         public ActionResult Index()
         {
-            Session["name"] = "aa";
+            var b = new AutekInfo.BLL.View_Employee_Info();
+            var list = b.GetModelList(" emp_isonworking='是' ");
+            DataSet ds = b_v_t_f.GetList(" * ", sort, pagesize, page, isGetCount, (order == "desc") ? false : true, strWhere.ToString());
+            int count = b_v_t_f.GetList(strWhere.ToString()).Tables[0].Rows.Count;//获取总数
+               
             return View();
         }
 

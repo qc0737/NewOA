@@ -12,19 +12,119 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/blockUI")
     @Scripts.Render("~/bundles/homemenu")
-    <title>Index</title>
+    <title>emp</title>
+    <script type="text/javascript">
+        $(function () {
+            $('#dgemp').datagrid({
+                url: '/HRInfo/',
+                rownumbers: true,
+                toolbar: [
+                   {
+                       text: '增加',
+                       iconCls: 'plugin_edit',
+                       handler: function () {
+                           addEmpInfo();
+
+                       }
+                   }
+                   , '-',
+                   {
+                       text: '修改',
+                       iconCls: 'pencil',
+                       handler: function () {
+                           var rows = $('#dgemp').datagrid('getSelections');
+                           if (rows.length != 1) {
+                               parent.$.messager.show({
+                                   title: '提示',
+                                   msg: '请选择一行编辑！',
+                                   timeout: 5000,
+                                   showType: 'slide'
+                               });
+                               $('#dgemp').datagrid('clearSelections');
+                           }
+                           else {
+                               editEmpInfo(rows[0]);
+                               $('#dgemp').datagrid('clearSelections');
+                           }
+                       }
+                   }, '-',
+                   {
+                       text: '取消选中',
+                       iconCls: 'redo',
+                       handler: function () {
+                           $('#dgemp').datagrid('unselectAll');
+                           $('#dgemp').datagrid('clearSelections');
+                       }
+                   }, '-',
+                   {
+                       text: '筛选',
+                       iconCls: 'search',
+                       handler: function () {
+                           filtEmpInfo();
+                       }
+                   }, '-',
+                   {
+                       text: '重置',
+                       iconCls: 'back',
+                       handler: function () {
+                           strWhere = " emp_isworking='是' and  iseecemp=1 "
+                           //strWhere = '1=1';
+                           $('#dgemp').datagrid('load', {
+                               strWhere: ''
+                           });
+                           $('#dgemp').datagrid('clearSelections');
+                       }
+                   }, '-',
+                   {
+                       text: '导出',
+                       iconCls: 'server_go',
+                       handler: function () {
+                           outputEmpInfo();
+                       }
+                   }, '-', {
+                       text: '批量修改',
+                       iconCls: 'plugin_edit',
+                       handler: function () {
+                           batchEdit();
+                       }
+                   }
+                ],
+                frozenColumns: [[
+                     { field: 'emp_id', title: 'emp_id', checkbox: true },
+                     { field: 'emp_worknum', title: '工号', width: 100, sortable: true },
+                     { field: 'emp_cnname', title: '姓名', width: 100, sortable: true },
+                     { field: 'emp_dept', title: '部门', width: 100, sortable: true }
+                ]],
+                columns: [[
+                    { field: 'emp_insti', title: 'emp_insti', width: 100, sortable: true },
+                    { field: 'emp_comp', title: 'emp_comp', width: 100, sortable: true },
+                    { field: 'emp_entrydate', title: 'emp_entrydate', width: 100, sortable: true },
+                    { field: 'emp_sex', title: 'emp_sex', width: 100, sortable: true },
+                    { field: 'emp_title', title: 'emp_title', width: 100, sortable: true },
+                    { field: 'emp_workarea', title: 'emp_workarea', width: 100, sortable: true },
+                    { field: 'emp_identity', title: 'emp_identity', width: 100, sortable: true },
+                    { field: 'emp_age', title: 'emp_age', width: 100, sortable: true },
+                    { field: 'emp_phone', title: 'emp_phone', width: 100, sortable: true },
+                    { field: 'emp_email', title: 'emp_email', width: 100, sortable: true }
+                ]],
+                striped: true,
+                sortName: 'emp_id',
+                pagination: true,
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                fit: true,
+                fitColumns: true,
+                idField: 'emp_id',
+                nowrap: true,
+                sortOrder: 'desc',
+                fitColumns: false
+            });
+            $('.datagrid-header div').css('text-align', 'center');
+        });
+    </script>
 </head>
 <body>
-    <div>
-        <h1>你好</h1>
-
-        @{
-            Session["name"].ToString();
-            <h2>
-                这是待开发的页面....
-
-            </h2>
-        }
-       </div>
+    <table id="dgemp"></table>
 </body>
 </html>
