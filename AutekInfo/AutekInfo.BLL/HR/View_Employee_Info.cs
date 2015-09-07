@@ -17,9 +17,9 @@ namespace AutekInfo.BLL {
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists()
+		public bool Exists(int emp_id)
 		{
-			return dal.Exists();
+            return dal.Exists(emp_id);
 		}
 
 		/// <summary>
@@ -159,6 +159,14 @@ namespace AutekInfo.BLL {
 			return GetList("");
 		}
 #endregion
-   
-	}
+        #region extend
+
+        public List<AutekInfo.Model.View_Employee_Info> GetModelListByPages(string strWhere,out int pcount,out int tcount)
+        {
+            DataSet ds = dal.GetModelListByPages(strWhere,out pcount,out tcount);
+            return DataTableToList(ds.Tables[0]);
+        }
+        #endregion
+
+    }
 }

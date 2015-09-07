@@ -10,7 +10,7 @@ namespace AutekInfo.DAL
 		public partial class View_Employee_Info
 	{
    		     
-		public bool Exists()
+		public bool Exists(int emp_id)
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("select count(1) from View_Employee_Info");
@@ -283,7 +283,13 @@ SqlParameter[] parameters = {
 			return DbHelperSQL.Query(strSql.ToString());
 		}
 
-   
-	}
+
+        #region extend
+        public DataSet GetModelListByPages(string strWhere,out int pcount,out int tcount)
+        {
+            return DbHelperSQL.GetRecordByPage("Employee_Info", "*", "emp_id", 50, 1, true, strWhere,out pcount,out tcount);
+        }
+        #endregion
+    }
 }
 

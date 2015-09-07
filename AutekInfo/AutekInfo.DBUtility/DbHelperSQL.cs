@@ -16,7 +16,7 @@ namespace AutekInfo.DBUtility
     public abstract class DbHelperSQL
     {
         //数据库连接字符串(web.config来配置)，多数据库可使用DbHelperSQLP来实现.
-        public static string EmployeesDBConnection = PubConstant.EmployeesDBConnection;
+        public static string AutekOAConnection = PubConstant.AutekOAConnection;
 
         public DbHelperSQL()
         {
@@ -144,7 +144,7 @@ namespace AutekInfo.DBUtility
         /// <returns>影响的记录数</returns>
         public static int ExecuteSql(string SQLString)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 using (SqlCommand cmd = new SqlCommand(SQLString, connection))
                 {
@@ -166,7 +166,7 @@ namespace AutekInfo.DBUtility
         }
         public static int ExecuteSqlByTime(string SQLString, int Times)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 using (SqlCommand cmd = new SqlCommand(SQLString, connection))
                 {
@@ -179,7 +179,7 @@ namespace AutekInfo.DBUtility
                     }
                     catch (System.Data.SqlClient.SqlException e)
                     {
-                      //  //Common.LogManager.WriteLog("DBError", e.StackTrace); connection.Close();
+                        //  //Common.LogManager.WriteLog("DBError", e.StackTrace); connection.Close();
                         connection.Dispose();
                         throw e;
                     }
@@ -192,7 +192,7 @@ namespace AutekInfo.DBUtility
         /// <param name="SQLStringList">多条SQL语句</param>		
         public static int ExecuteSqlTran(List<String> SQLStringList)
         {
-            using (SqlConnection conn = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection conn = new SqlConnection(AutekOAConnection))
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand();
@@ -231,7 +231,7 @@ namespace AutekInfo.DBUtility
         /// <returns>影响的记录数</returns>
         public static int ExecuteSql(string SQLString, string content)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 SqlCommand cmd = new SqlCommand(SQLString, connection);
                 System.Data.SqlClient.SqlParameter myParameter = new System.Data.SqlClient.SqlParameter("@content", SqlDbType.NText);
@@ -245,7 +245,7 @@ namespace AutekInfo.DBUtility
                 }
                 catch (System.Data.SqlClient.SqlException e)
                 {
-                   // //Common.LogManager.WriteLog("DBError", e.StackTrace);
+                    // //Common.LogManager.WriteLog("DBError", e.StackTrace);
                     throw e;
                 }
                 finally
@@ -264,7 +264,7 @@ namespace AutekInfo.DBUtility
         /// <returns>影响的记录数</returns>
         public static object ExecuteSqlGet(string SQLString, string content)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 SqlCommand cmd = new SqlCommand(SQLString, connection);
                 System.Data.SqlClient.SqlParameter myParameter = new System.Data.SqlClient.SqlParameter("@content", SqlDbType.NText);
@@ -285,7 +285,7 @@ namespace AutekInfo.DBUtility
                 }
                 catch (System.Data.SqlClient.SqlException e)
                 {
-                   // //Common.LogManager.WriteLog("DBError", e.StackTrace);
+                    // //Common.LogManager.WriteLog("DBError", e.StackTrace);
                     throw e;
                 }
                 finally
@@ -304,7 +304,7 @@ namespace AutekInfo.DBUtility
         /// <returns>影响的记录数</returns>
         public static int ExecuteSqlInsertImg(string strSQL, byte[] fs)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 SqlCommand cmd = new SqlCommand(strSQL, connection);
                 System.Data.SqlClient.SqlParameter myParameter = new System.Data.SqlClient.SqlParameter("@fs", SqlDbType.Image);
@@ -318,7 +318,7 @@ namespace AutekInfo.DBUtility
                 }
                 catch (System.Data.SqlClient.SqlException e)
                 {
-                  //  //Common.LogManager.WriteLog("DBError", e.StackTrace);
+                    //  //Common.LogManager.WriteLog("DBError", e.StackTrace);
                     throw e;
                 }
                 finally
@@ -336,7 +336,7 @@ namespace AutekInfo.DBUtility
         /// <returns>查询结果（object）</returns>
         public static object GetSingle(string SQLString)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 using (SqlCommand cmd = new SqlCommand(SQLString, connection))
                 {
@@ -355,7 +355,7 @@ namespace AutekInfo.DBUtility
                     }
                     catch (System.Data.SqlClient.SqlException e)
                     {
-                       // //Common.LogManager.WriteLog("DBError", e.StackTrace);
+                        // //Common.LogManager.WriteLog("DBError", e.StackTrace);
                         connection.Close();
                         connection.Dispose();
                         throw e;
@@ -365,7 +365,7 @@ namespace AutekInfo.DBUtility
         }
         public static object GetSingle(string SQLString, int Times)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 using (SqlCommand cmd = new SqlCommand(SQLString, connection))
                 {
@@ -400,7 +400,7 @@ namespace AutekInfo.DBUtility
         /// <returns>SqlDataReader</returns>
         public static SqlDataReader ExecuteReader(string strSQL)
         {
-            SqlConnection connection = new SqlConnection(EmployeesDBConnection);
+            SqlConnection connection = new SqlConnection(AutekOAConnection);
             SqlCommand cmd = new SqlCommand(strSQL, connection);
             try
             {
@@ -427,7 +427,7 @@ namespace AutekInfo.DBUtility
         /// <returns>DataSet</returns>
         public static DataSet Query(string SQLString)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 DataSet ds = new DataSet();
                 try
@@ -438,7 +438,7 @@ namespace AutekInfo.DBUtility
                 }
                 catch (System.Data.SqlClient.SqlException ex)
                 {
-                 //   //Common.LogManager.WriteLog("DBError", ex.StackTrace);
+                    //   //Common.LogManager.WriteLog("DBError", ex.StackTrace);
                     throw new Exception(ex.Message);
                 }
                 finally
@@ -451,7 +451,7 @@ namespace AutekInfo.DBUtility
         }
         public static DataSet Query(string SQLString, int Times)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 DataSet ds = new DataSet();
                 try
@@ -483,7 +483,7 @@ namespace AutekInfo.DBUtility
         /// <returns>影响的记录数</returns>
         public static int ExecuteSql(string SQLString, params SqlParameter[] cmdParms)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 using (SqlCommand cmd = new SqlCommand())
                 {
@@ -514,7 +514,7 @@ namespace AutekInfo.DBUtility
         /// <param name="SQLStringList">SQL语句的哈希表（key为sql语句，value是该语句的SqlParameter[]）</param>
         public static void ExecuteSqlTran(Hashtable SQLStringList)
         {
-            using (SqlConnection conn = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection conn = new SqlConnection(AutekOAConnection))
             {
                 conn.Open();
                 using (SqlTransaction trans = conn.BeginTransaction())
@@ -554,7 +554,7 @@ namespace AutekInfo.DBUtility
         /// <param name="SQLStringList">SQL语句的哈希表（key为sql语句，value是该语句的SqlParameter[]）</param>
         public static int ExecuteSqlTran(System.Collections.Generic.List<CommandInfo> cmdList)
         {
-            using (SqlConnection conn = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection conn = new SqlConnection(AutekOAConnection))
             {
                 conn.Open();
                 using (SqlTransaction trans = conn.BeginTransaction())
@@ -628,7 +628,7 @@ namespace AutekInfo.DBUtility
         /// <param name="SQLStringList">SQL语句的哈希表（key为sql语句，value是该语句的SqlParameter[]）</param>
         public static void ExecuteSqlTranWithIndentity(System.Collections.Generic.List<CommandInfo> SQLStringList)
         {
-            using (SqlConnection conn = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection conn = new SqlConnection(AutekOAConnection))
             {
                 conn.Open();
                 using (SqlTransaction trans = conn.BeginTransaction())
@@ -683,7 +683,7 @@ namespace AutekInfo.DBUtility
         /// <param name="SQLStringList">SQL语句的哈希表（key为sql语句，value是该语句的SqlParameter[]）</param>
         public static void ExecuteSqlTranWithIndentity(Hashtable SQLStringList)
         {
-            using (SqlConnection conn = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection conn = new SqlConnection(AutekOAConnection))
             {
                 conn.Open();
                 using (SqlTransaction trans = conn.BeginTransaction())
@@ -739,7 +739,7 @@ namespace AutekInfo.DBUtility
         /// <returns>查询结果（object）</returns>
         public static object GetSingle(string SQLString, params SqlParameter[] cmdParms)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 using (SqlCommand cmd = new SqlCommand())
                 {
@@ -778,7 +778,7 @@ namespace AutekInfo.DBUtility
         /// <returns>SqlDataReader</returns>
         public static SqlDataReader ExecuteReader(string SQLString, params SqlParameter[] cmdParms)
         {
-            SqlConnection connection = new SqlConnection(EmployeesDBConnection);
+            SqlConnection connection = new SqlConnection(AutekOAConnection);
             SqlCommand cmd = new SqlCommand();
             try
             {
@@ -806,7 +806,7 @@ namespace AutekInfo.DBUtility
         /// <returns>DataSet</returns>
         public static DataSet Query(string SQLString, params SqlParameter[] cmdParms)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 SqlCommand cmd = new SqlCommand();
                 PrepareCommand(cmd, connection, null, SQLString, cmdParms);
@@ -866,7 +866,7 @@ namespace AutekInfo.DBUtility
         /// <returns>SqlDataReader</returns>
         //public static SqlDataReader RunProcedure(string storedProcName, IDataParameter[] parameters)
         //{
-        //        SqlConnection connection = new SqlConnection(EmployeesDBConnection);
+        //        SqlConnection connection = new SqlConnection(AutekOAConnection);
         //        SqlDataReader returnReader;
         //        try
         //        {
@@ -895,7 +895,7 @@ namespace AutekInfo.DBUtility
         /// <returns>DataSet</returns>
         public static DataSet RunProcedure(string storedProcName, IDataParameter[] parameters, string tableName)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 try
                 {
@@ -922,7 +922,7 @@ namespace AutekInfo.DBUtility
         }
         public static DataSet RunProcedure(string storedProcName, IDataParameter[] parameters, string tableName, int Times)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 try
                 {
@@ -983,7 +983,7 @@ namespace AutekInfo.DBUtility
         /// <returns></returns>
         public static int RunProcedure(string storedProcName, IDataParameter[] parameters, out int rowsAffected)
         {
-            using (SqlConnection connection = new SqlConnection(EmployeesDBConnection))
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
             {
                 try
                 {
@@ -1024,5 +1024,79 @@ namespace AutekInfo.DBUtility
             return command;
         }
         #endregion
+        #region 分页存储过程
+       
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="getFields"></param>
+        /// <param name="orderName"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="orderType"></param>
+        /// <param name="strWhere"></param>
+        /// <param name="pageCount"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public static DataSet GetRecordByPage(string table,string getFields, string orderName, int pageSize, int pageIndex,bool orderType, string strWhere, out int pageCount, out int totalCount)
+        {
+            DataSet ds = new DataSet();
+            using (SqlConnection connection = new SqlConnection(AutekOAConnection))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = connection;
+                    cmd.Parameters.Add(new SqlParameter("@tblName", SqlDbType.VarChar, 255));
+                    cmd.Parameters.Add(new SqlParameter("@strGetFields", SqlDbType.VarChar, 1000));
+                    cmd.Parameters.Add(new SqlParameter("@fldName", SqlDbType.VarChar, 1000));
+                    cmd.Parameters.Add(new SqlParameter("@PageSize", SqlDbType.Int));
+                    cmd.Parameters.Add(new SqlParameter("@PageIndex", SqlDbType.Int));
+                    cmd.Parameters.Add(new SqlParameter("@OrderType", SqlDbType.Bit));
+                    cmd.Parameters.Add(new SqlParameter("@strWhere", SqlDbType.VarChar, 8000));
+
+                    SqlParameter param = new SqlParameter("@totalCount", SqlDbType.Int);
+                    param.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(param);
+
+                    SqlParameter param1 = new SqlParameter("@pageCount", SqlDbType.Int);
+                    param1.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(param1);
+
+                    cmd.Parameters[0].Value = table;
+                    cmd.Parameters[1].Value = getFields;
+                    cmd.Parameters[2].Value = orderName;
+                    cmd.Parameters[3].Value = pageSize;
+                    cmd.Parameters[4].Value = pageIndex;
+                    cmd.Parameters[5].Value = orderType;
+                    cmd.Parameters[6].Value = strWhere;
+                    cmd.Parameters[7].Value =0;
+                    cmd.Parameters[8].Value =0;
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "pro_pageList";
+
+                    SqlDataAdapter adapter = new SqlDataAdapter();
+                    adapter.SelectCommand = cmd;
+
+                    DataSet source = new DataSet();
+                    adapter.Fill(ds);
+
+                    object o = cmd.Parameters["@totalCount"].Value;
+                    totalCount = (o == null || o == DBNull.Value) ? 0 : System.Convert.ToInt32(o);
+
+                    object b = cmd.Parameters["@pageCount"].Value;
+                    pageCount = (b == null || o == DBNull.Value) ? 0 : System.Convert.ToInt32(b);
+                }
+                catch (SqlException e)
+                {
+                    throw e;
+                }
+                return ds;
+            }            
+        }
     }
+
+        #endregion
 }
