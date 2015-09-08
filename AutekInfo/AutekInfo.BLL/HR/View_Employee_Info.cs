@@ -161,9 +161,9 @@ namespace AutekInfo.BLL {
 #endregion
         #region extend
 
-        public List<AutekInfo.Model.View_Employee_Info> GetModelListByPages(string strWhere,out int pcount,out int tcount)
+        public List<AutekInfo.Model.View_Employee_Info> GetModelListByPages(string fields, string sort, int pagesize, int page, string strWhere,bool sorttype ,out int tcount)
         {
-            DataSet ds = dal.GetModelListByPages(strWhere,out pcount,out tcount);
+            DataSet ds = dal.GetModelListByPages(fields, sort, pagesize,  page,   strWhere,sorttype,out tcount);
             return DataTableToList(ds.Tables[0]);
         }
         #endregion

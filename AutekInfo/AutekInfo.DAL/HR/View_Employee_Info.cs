@@ -285,9 +285,9 @@ SqlParameter[] parameters = {
 
 
         #region extend
-        public DataSet GetModelListByPages(string strWhere,out int pcount,out int tcount)
+        public DataSet GetModelListByPages(string fields,string sort,int pagesize, int page,  string strWhere,bool sorttype,out int tcount)
         {
-            return DbHelperSQL.GetRecordByPage("Employee_Info", "*", "emp_id", 50, 1, true, strWhere,out pcount,out tcount);
+            return DbHelperSQL.GetRecordByPage("View_Employee_Info", fields, sort, pagesize, page, strWhere, sorttype, out tcount);
         }
         #endregion
     }

@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Web;
 
 namespace AutekInfo.Common
@@ -750,7 +752,7 @@ namespace AutekInfo.Common
             }
             return sb.ToString();
         }
-        #region list to eayui tree
+        #region list to eayui tree 同步
         /// <summary>
         /// 
         /// </summary>
@@ -803,6 +805,27 @@ namespace AutekInfo.Common
             }
             return result.ToString();
         }
+        #endregion
+        #region list to datagrid with count
+
+        public static string GetGridJson<T>(List<T> list, int count,string datefmt)
+        { 
+             StringBuilder JsonString = new StringBuilder();
+            if (list.Count>0)
+            {
+                JsonString.Append("{ ");
+                JsonString.Append("\"rows\": ");
+                IsoDateTimeConverter timeConverter = new IsoDateTimeConverter();
+               // timeConverter.DateTimeFormat = "yyyy'-'MM'-'dd' 'HH':'mm':'ss";
+                timeConverter.DateTimeFormat = datefmt;
+                JsonString.Append(JsonConvert.SerializeObject(list, Formatting.Indented, timeConverter));
+                JsonString.Append(",\"total\":");
+                JsonString.Append(count);
+                 JsonString.Append("}");
+            }
+            return JsonString.ToString();
+        }
+
         #endregion
     }
     

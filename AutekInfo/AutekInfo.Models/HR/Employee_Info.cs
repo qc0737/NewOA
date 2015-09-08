@@ -82,8 +82,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_birthdate
         /// </summary>		
-		private DateTime _emp_birthdate;
-        public DateTime emp_birthdate
+		private DateTime? _emp_birthdate;
+        public DateTime? emp_birthdate
         {
             get{ return _emp_birthdate; }
             set{ _emp_birthdate = value; }
@@ -91,8 +91,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_entrydate
         /// </summary>		
-		private DateTime _emp_entrydate;
-        public DateTime emp_entrydate
+		private DateTime? _emp_entrydate;
+        public DateTime? emp_entrydate
         {
             get{ return _emp_entrydate; }
             set{ _emp_entrydate = value; }
@@ -109,8 +109,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_practicedate
         /// </summary>		
-		private DateTime _emp_practicedate;
-        public DateTime emp_practicedate
+		private DateTime? _emp_practicedate;
+        public DateTime? emp_practicedate
         {
             get{ return _emp_practicedate; }
             set{ _emp_practicedate = value; }
@@ -118,8 +118,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_lastdate
         /// </summary>		
-		private DateTime _emp_lastdate;
-        public DateTime emp_lastdate
+		private DateTime? _emp_lastdate;
+        public DateTime? emp_lastdate
         {
             get{ return _emp_lastdate; }
             set{ _emp_lastdate = value; }
@@ -181,8 +181,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_cometruedate
         /// </summary>		
-		private DateTime _emp_cometruedate;
-        public DateTime emp_cometruedate
+		private DateTime? _emp_cometruedate;
+        public DateTime? emp_cometruedate
         {
             get{ return _emp_cometruedate; }
             set{ _emp_cometruedate = value; }
@@ -190,8 +190,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_yjcometruedate
         /// </summary>		
-		private DateTime _emp_yjcometruedate;
-        public DateTime emp_yjcometruedate
+		private DateTime? _emp_yjcometruedate;
+        public DateTime? emp_yjcometruedate
         {
             get{ return _emp_yjcometruedate; }
             set{ _emp_yjcometruedate = value; }
@@ -199,8 +199,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_beginworkdate
         /// </summary>		
-		private DateTime _emp_beginworkdate;
-        public DateTime emp_beginworkdate
+		private DateTime? _emp_beginworkdate;
+        public DateTime? emp_beginworkdate
         {
             get{ return _emp_beginworkdate; }
             set{ _emp_beginworkdate = value; }
@@ -397,8 +397,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_dimissdate
         /// </summary>		
-		private DateTime _emp_dimissdate;
-        public DateTime emp_dimissdate
+		private DateTime? _emp_dimissdate;
+        public DateTime? emp_dimissdate
         {
             get{ return _emp_dimissdate; }
             set{ _emp_dimissdate = value; }
@@ -514,8 +514,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_real_brithdate
         /// </summary>		
-		private DateTime _emp_real_brithdate;
-        public DateTime emp_real_brithdate
+		private DateTime? _emp_real_brithdate;
+        public DateTime? emp_real_brithdate
         {
             get{ return _emp_real_brithdate; }
             set{ _emp_real_brithdate = value; }
@@ -550,8 +550,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_createdate
         /// </summary>		
-		private DateTime _emp_createdate;
-        public DateTime emp_createdate
+		private DateTime? _emp_createdate;
+        public DateTime? emp_createdate
         {
             get{ return _emp_createdate; }
             set{ _emp_createdate = value; }

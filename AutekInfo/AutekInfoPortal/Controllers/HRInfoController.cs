@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using AutekInfo;
 namespace AutekInfoPortal.Controllers
@@ -13,19 +14,25 @@ namespace AutekInfoPortal.Controllers
         //
         // GET: /HRInfo/
 
-        public ActionResult Index()
+        public ViewResult Index()
         {
-            var b = new AutekInfo.BLL.View_Employee_Info();
-            int pcount=0;
-            int tcount = 0;
-            var list = b.GetModelListByPages("1=1", out pcount, out tcount);
-
-            //var list = b.GetModelList(" emp_isonworking='是' ");
-            //DataSet ds = b_v_t_f.GetList(" * ", sort, pagesize, page, isGetCount, (order == "desc") ? false : true, strWhere.ToString());
-            //int count = b_v_t_f.GetList(strWhere.ToString()).Tables[0].Rows.Count;//获取总数
-            
-               
             return View();
+        }
+        public ContentResult GetEmpList()
+        {
+            int page = Convert.ToInt32(Request["page"]);
+            int pagesize = Convert.ToInt32(Request["rows"]);
+            string sort = Request["sort"];
+            bool order = Request["order"]=="desc"?false:true;
+            var b = new AutekInfo.BLL.View_Employee_Info();
+            int tcount = 0;
+            //if (sort != "emp_id")
+            //{
+            //    sort += ",emp_id";
+            //}
+            var list = b.GetModelListByPages("*",sort,pagesize,page," emp_isonworking='是' ",order, out tcount);
+            string json = AutekInfo.Common.JsonHelper.GetGridJson(list, tcount,"yyyy'-'MM'-'dd");
+            return Content(json);
         }
 
     }

@@ -1039,7 +1039,7 @@ namespace AutekInfo.DBUtility
         /// <param name="pageCount"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        public static DataSet GetRecordByPage(string table,string getFields, string orderName, int pageSize, int pageIndex,bool orderType, string strWhere, out int pageCount, out int totalCount)
+        public static DataSet GetRecordByPage(string table, string getFields, string orderName, int pageSize, int pageIndex, string strWhere, bool orderType, out int totalCount)
         {
             DataSet ds = new DataSet();
             using (SqlConnection connection = new SqlConnection(AutekOAConnection))
@@ -1060,9 +1060,9 @@ namespace AutekInfo.DBUtility
                     param.Direction = ParameterDirection.Output;
                     cmd.Parameters.Add(param);
 
-                    SqlParameter param1 = new SqlParameter("@pageCount", SqlDbType.Int);
-                    param1.Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add(param1);
+                    //SqlParameter param1 = new SqlParameter("@pageCount", SqlDbType.Int);
+                    //param1.Direction = ParameterDirection.Output;
+                    //cmd.Parameters.Add(param1);
 
                     cmd.Parameters[0].Value = table;
                     cmd.Parameters[1].Value = getFields;
@@ -1072,7 +1072,7 @@ namespace AutekInfo.DBUtility
                     cmd.Parameters[5].Value = orderType;
                     cmd.Parameters[6].Value = strWhere;
                     cmd.Parameters[7].Value =0;
-                    cmd.Parameters[8].Value =0;
+                   // cmd.Parameters[8].Value =0;
 
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = "pro_pageList";
@@ -1086,8 +1086,8 @@ namespace AutekInfo.DBUtility
                     object o = cmd.Parameters["@totalCount"].Value;
                     totalCount = (o == null || o == DBNull.Value) ? 0 : System.Convert.ToInt32(o);
 
-                    object b = cmd.Parameters["@pageCount"].Value;
-                    pageCount = (b == null || o == DBNull.Value) ? 0 : System.Convert.ToInt32(b);
+                    //object b = cmd.Parameters["@pageCount"].Value;
+                    //pageCount = (b == null || o == DBNull.Value) ? 0 : System.Convert.ToInt32(b);
                 }
                 catch (SqlException e)
                 {

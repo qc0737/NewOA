@@ -64,8 +64,8 @@ namespace AutekInfo.Model{
 		/// <summary>
 		/// emp_entrydate
         /// </summary>		
-		private DateTime _emp_entrydate;
-        public DateTime emp_entrydate
+		private DateTime? _emp_entrydate;
+        public DateTime? emp_entrydate
         {
             get{ return _emp_entrydate; }
             set{ _emp_entrydate = value; }

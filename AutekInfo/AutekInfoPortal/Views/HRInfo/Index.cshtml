@@ -16,12 +16,13 @@
     <script type="text/javascript">
         $(function () {
             $('#dgemp').datagrid({
-                url: '/HRInfo/',
+                url: '/HRInfo/GetEmpList',
+                method:'post',
                 rownumbers: true,
                 toolbar: [
                    {
                        text: '增加',
-                       iconCls: 'plugin_edit',
+                       iconCls: 'pic pic_34',
                        handler: function () {
                            addEmpInfo();
 
@@ -30,7 +31,7 @@
                    , '-',
                    {
                        text: '修改',
-                       iconCls: 'pencil',
+                       iconCls: 'pic pic_95',
                        handler: function () {
                            var rows = $('#dgemp').datagrid('getSelections');
                            if (rows.length != 1) {
@@ -50,7 +51,7 @@
                    }, '-',
                    {
                        text: '取消选中',
-                       iconCls: 'redo',
+                       iconCls: 'pic pic_118',
                        handler: function () {
                            $('#dgemp').datagrid('unselectAll');
                            $('#dgemp').datagrid('clearSelections');
@@ -58,14 +59,14 @@
                    }, '-',
                    {
                        text: '筛选',
-                       iconCls: 'search',
+                       iconCls: 'pic pic_114',
                        handler: function () {
                            filtEmpInfo();
                        }
                    }, '-',
                    {
                        text: '重置',
-                       iconCls: 'back',
+                       iconCls:'pic pic_201',
                        handler: function () {
                            strWhere = " emp_isworking='是' and  iseecemp=1 "
                            //strWhere = '1=1';
@@ -77,54 +78,71 @@
                    }, '-',
                    {
                        text: '导出',
-                       iconCls: 'server_go',
+                       iconCls: 'pic pic_202',
                        handler: function () {
                            outputEmpInfo();
                        }
                    }, '-', {
                        text: '批量修改',
-                       iconCls: 'plugin_edit',
+                       iconCls: 'pic pic_199',
                        handler: function () {
                            batchEdit();
                        }
                    }
                 ],
                 frozenColumns: [[
-                     { field: 'emp_id', title: 'emp_id', checkbox: true },
-                     { field: 'emp_worknum', title: '工号', width: 100, sortable: true },
-                     { field: 'emp_cnname', title: '姓名', width: 100, sortable: true },
-                     { field: 'emp_dept', title: '部门', width: 100, sortable: true }
+                     //{ field: 'emp_id', title: 'emp_id', checkbox: true },
+                     { field: 'emp_id', title: 'emp_id', width: 40, sortable: true },
+                     { field: 'emp_worknum', title: '工号', width: 40, sortable: true },
+                     {
+                         field: 'emp_cnname',
+                         title: '姓名',
+                         width: 50,
+                         align: 'center',
+                         sortable: true,
+                         formatter: function (value, row, index) {
+                             return "<a href='javascript:tdetail(" + value + ")' title='点击查看详细信息'>" + value + "</a>";
+                         }
+                     },
+
+                     { field: 'emp_dept', title: '部门', width: 80, sortable: true }
                 ]],
                 columns: [[
-                    { field: 'emp_insti', title: 'emp_insti', width: 100, sortable: true },
-                    { field: 'emp_comp', title: 'emp_comp', width: 100, sortable: true },
-                    { field: 'emp_entrydate', title: 'emp_entrydate', width: 100, sortable: true },
-                    { field: 'emp_sex', title: 'emp_sex', width: 100, sortable: true },
-                    { field: 'emp_title', title: 'emp_title', width: 100, sortable: true },
-                    { field: 'emp_workarea', title: 'emp_workarea', width: 100, sortable: true },
-                    { field: 'emp_identity', title: 'emp_identity', width: 100, sortable: true },
-                    { field: 'emp_age', title: 'emp_age', width: 100, sortable: true },
-                    { field: 'emp_phone', title: 'emp_phone', width: 100, sortable: true },
-                    { field: 'emp_email', title: 'emp_email', width: 100, sortable: true }
+                    { field: 'emp_insti', title: '院别', width: 100, sortable: true },
+                    { field: 'emp_comp', title: '公司', width: 100, sortable: true },
+                    { field: 'emp_entrydate', title: '入职日期', width: 100, sortable: true },
+                    { field: 'emp_sex', title: '性别', width: 50, sortable: true },
+                    { field: 'emp_title', title: '职位', width: 100, sortable: true },
+                    { field: 'emp_workarea', title: '工作地', width: 60, align: 'center', sortable: true },
+                    { field: 'emp_identity', title: '身份证', width: 150, sortable: true },
+                    { field: 'emp_age', title: '年龄', width: 50, align: 'center', sortable: true },
+                    { field: 'emp_phone', title: '手机', width: 100, sortable: true },
+                    { field: 'emp_email', title: '邮箱', width: 150, sortable: true }
                 ]],
                 striped: true,
-                sortName: 'emp_id',
+                sortName: 'emp_comp',
                 pagination: true,
                 pageNumber: 1,
-                pageSize: 10,
-                pageList: [10, 20, 30],
+                pageSize: parseInt(($(window).height() - 100) / 25),                
+               pageList: [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19, 20,21,22,23,24,25,26,27,28,29, 30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50],
                 fit: true,
-                fitColumns: true,
+                fitColumns: false,
                 idField: 'emp_id',
                 nowrap: true,
                 sortOrder: 'desc',
-                fitColumns: false
+                fitColumns: true,
+                loadMsg:'正在努力加载数据...',
+                onLoadError: function () {
+                    $.messager.alert("错误", "数据加载失败！请跟跟管理员联系！", "warning");
+                }                
             });
             $('.datagrid-header div').css('text-align', 'center');
+            
         });
     </script>
 </head>
 <body>
-    <table id="dgemp"></table>
+    <table id="dgemp" style="height:auto; "></table>
+    
 </body>
 </html>
