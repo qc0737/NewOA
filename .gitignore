@@ -1,5 +1,6 @@
 *.csproj
 *.dll
+*.lib
 *.pdb
 *.cache
 *.xml
@@ -15,6 +16,10 @@
 *.ico
 *.transform
 *.Log
+*.xls
+*.doc
+*.docx
+*.xlsx
 /AutekInfo/packages/
 /AutekInfo/AutekInfoPortal/obj/
 /AutekInfo/AutekInfoPortal/Content/

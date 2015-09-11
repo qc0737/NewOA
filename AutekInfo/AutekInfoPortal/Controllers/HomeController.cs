@@ -28,12 +28,14 @@ namespace AutekInfoPortal.Controllers
             int pid =int.Parse( Request["id"].ToString());
             //var list = new AutekInfo.BLL.Menu().GetModelList(String.Format(" menu_pid = {0} ", menu_pid));
             var list = list_all.FindAll(menu => menu.menu_pid == pid);
-            return Json(list, JsonRequestBehavior.AllowGet);
+            return Json(list, JsonRequestBehavior.DenyGet);
         }
         /// <summary>
         /// 获取次顶层菜单
         /// </summary>
         /// <returns></returns>
+        /// 
+        [HttpPost]
         public ContentResult GetTreeMenu()
         {
             string menu_pid = Request["menu_pid"].ToString();

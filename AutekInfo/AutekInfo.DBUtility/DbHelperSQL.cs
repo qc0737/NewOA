@@ -1039,7 +1039,7 @@ namespace AutekInfo.DBUtility
         /// <param name="pageCount"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        public static DataSet GetRecordByPage(string table, string getFields, string orderName, int pageSize, int pageIndex, string strWhere, bool orderType, out int totalCount)
+        public static DataSet GetRecordByPage(string table, string id,string getFields, string orderName, int pageSize, int pageIndex, string strWhere, bool orderType, out int totalCount)
         {
             DataSet ds = new DataSet();
             using (SqlConnection connection = new SqlConnection(AutekOAConnection))
@@ -1049,8 +1049,9 @@ namespace AutekInfo.DBUtility
                     SqlCommand cmd = new SqlCommand();
                     cmd.Connection = connection;
                     cmd.Parameters.Add(new SqlParameter("@tblName", SqlDbType.VarChar, 255));
+                    cmd.Parameters.Add(new SqlParameter("@id", SqlDbType.VarChar, 255));
                     cmd.Parameters.Add(new SqlParameter("@strGetFields", SqlDbType.VarChar, 1000));
-                    cmd.Parameters.Add(new SqlParameter("@fldName", SqlDbType.VarChar, 1000));
+                    cmd.Parameters.Add(new SqlParameter("@fldOrderName", SqlDbType.VarChar, 1000));
                     cmd.Parameters.Add(new SqlParameter("@PageSize", SqlDbType.Int));
                     cmd.Parameters.Add(new SqlParameter("@PageIndex", SqlDbType.Int));
                     cmd.Parameters.Add(new SqlParameter("@OrderType", SqlDbType.Bit));
@@ -1065,13 +1066,14 @@ namespace AutekInfo.DBUtility
                     //cmd.Parameters.Add(param1);
 
                     cmd.Parameters[0].Value = table;
-                    cmd.Parameters[1].Value = getFields;
-                    cmd.Parameters[2].Value = orderName;
-                    cmd.Parameters[3].Value = pageSize;
-                    cmd.Parameters[4].Value = pageIndex;
-                    cmd.Parameters[5].Value = orderType;
-                    cmd.Parameters[6].Value = strWhere;
-                    cmd.Parameters[7].Value =0;
+                    cmd.Parameters[1].Value = id;
+                    cmd.Parameters[2].Value = getFields;
+                    cmd.Parameters[3].Value = orderName;
+                    cmd.Parameters[4].Value = pageSize;
+                    cmd.Parameters[5].Value = pageIndex;
+                    cmd.Parameters[6].Value = orderType;
+                    cmd.Parameters[7].Value = strWhere;
+                    cmd.Parameters[8].Value =0;
                    // cmd.Parameters[8].Value =0;
 
                     cmd.CommandType = CommandType.StoredProcedure;

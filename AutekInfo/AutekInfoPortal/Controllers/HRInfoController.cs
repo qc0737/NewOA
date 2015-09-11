@@ -23,14 +23,10 @@ namespace AutekInfoPortal.Controllers
             int page = Convert.ToInt32(Request["page"]);
             int pagesize = Convert.ToInt32(Request["rows"]);
             string sort = Request["sort"];
-            bool order = Request["order"]=="desc"?false:true;
+            bool order = Request["order"] == "desc" ? true : false;
             var b = new AutekInfo.BLL.View_Employee_Info();
-            int tcount = 0;
-            //if (sort != "emp_id")
-            //{
-            //    sort += ",emp_id";
-            //}
-            var list = b.GetModelListByPages("*",sort,pagesize,page," emp_isonworking='是' ",order, out tcount);
+            int tcount = 0;           
+            var list = b.GetModelListByPages("*","emp_id",sort,pagesize,page," emp_isonworking='是' ",order, out tcount);
             string json = AutekInfo.Common.JsonHelper.GetGridJson(list, tcount,"yyyy'-'MM'-'dd");
             return Content(json);
         }

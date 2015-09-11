@@ -12,7 +12,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/blockUI")
     @Scripts.Render("~/bundles/homemenu")
-    <title>emp</title>
+    <title></title>
     <script type="text/javascript">
         $(function () {
             $('#dgemp').datagrid({
@@ -120,7 +120,7 @@
                     { field: 'emp_email', title: '邮箱', width: 150, sortable: true }
                 ]],
                 striped: true,
-                sortName: 'emp_comp',
+                sortName: 'emp_worknum',
                 pagination: true,
                 pageNumber: 1,
                 pageSize: parseInt(($(window).height() - 100) / 25),                
