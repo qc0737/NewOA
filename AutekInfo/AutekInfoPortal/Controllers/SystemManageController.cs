@@ -222,77 +222,11 @@ namespace AutekInfoPortal.Controllers
 
         #endregion
         #region Role2Emp
-        public ActionResult RoleManage()
+        public ActionResult Role2Emp()
         {
             return View();
         }
-        public string GetRoles()
-        {
-            var b_role = new AutekInfo.BLL.Emp_Roles();
-            var list = b_role.GetModelList("");
-            return JsonConvert.SerializeObject(list);
-        }
-        public string AddRoles()
-        {
-            string role_code = Request["role_code"].Trim();
-            string role_name = Request["role_name"].Trim();
-            string role_describe = Request["role_describe"].Trim();
-            var b_role = new AutekInfo.BLL.Emp_Roles();
-            var list = b_role.GetModelList(String.Format("role_code='{0}' or role_name='{1}'", role_code, role_name));
-            if (list.Count > 0)
-            {
-                return "该角色已存在！";
-            }
-            var m = new AutekInfo.Model.Emp_Roles();
-            m.role_code = role_code;
-            m.role_name = role_name;
-            m.role_describe = role_describe;
-            return b_role.Add(m).ToString();
-        }
-        public string EditRoles()
-        {
-            int role_id = int.Parse(Request["role_id"].ToString());
-            string role_code = Request["role_code"].ToString().Trim();
-            string role_name = Request["role_name"].ToString().Trim();
-            string role_describe = Request["role_describe"].ToString().Trim();
-            var b_role = new AutekInfo.BLL.Emp_Roles();
-            var m_role = b_role.GetModel(role_id);
-            if (m_role.role_code != role_code || m_role.role_name != role_name)
-            {
-                var _list = b_role.GetModelList(String.Format(" role_name='{0}' or role_code='(1)' ", role_name, role_code));
-                if (_list.Count > 0)
-                {
-                    return "角色名或代码重复！";
-                }
-            }
-            m_role.role_code = role_code;
-            m_role.role_name = role_name;
-            m_role.role_describe = role_describe;
-            return b_role.Update(m_role).ToString().ToLower();
-        }
-        public string DelRoles()
-        {
-            string ids = Request.QueryString["ids"];
-            var b_role = new AutekInfo.BLL.Emp_Roles();
-            return b_role.DeleteList(ids).ToString().ToLower();
-        }
-        public ActionResult OutPutRoles()
-        {
-            List<AutekInfo.Common.ExcTitvsFeilds> list_excelTitle = new List<AutekInfo.Common.ExcTitvsFeilds>();
-
-
-            list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "ID", feild = "role_id" });
-            list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "角色代码", feild = "role_code" });
-            list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "角色描述", feild = "role_describe" });
-            //list_excelTitle.Add("角色代码");
-            //list_excelTitle.Add("角色名称");
-            //list_excelTitle.Add("角色描述");            
-            var b_role = new AutekInfo.BLL.Emp_Roles();
-            List<AutekInfo.Model.Emp_Roles> list_m = b_role.GetModelList("");
-            // return b_role.DeleteList(ids).ToString().ToLower();
-            string temp_filepath = AutekInfo.Common.ExcelHelper.OutputList(list_excelTitle, list_m);
-            return File(temp_filepath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "导出roles.xlsx");
-        }
+       
         #endregion
     }
 }
