@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/jquery-easyui-1.4.3/themes/default/css")
+    @Styles.Render("~/Content/autek/Style/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/blockUI")
+    @Scripts.Render("~/bundles/homemenu")
+    <title>SelectEmps</title>
+    <script type="text/javascript">
+        $(function () {
+    $('#dd').dialog({
+    title: 'My Dialog',
+    width: 400,
+    height: 200,
+    closed: false,
+    cache: false,
+    href: '/SystemManage/GetEmps',
+    modal: true
+    });
+        });
+
+            </script>
+</head>
+<body>
+    <<div id="dd">Dialog Content.</div>
+</body>
+</html>

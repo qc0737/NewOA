@@ -63,7 +63,7 @@ namespace AutekInfo.BLL {
 		public AutekInfo.Model.View_Emp_Role GetModelByCache()
 		{
 			
-			string CacheKey = "View_Emp_RoleModel-" ;
+			string CacheKey = "View_Emp_RoleModel-"  ;
 			object objModel = AutekInfo.Common.DataCache.GetCache(CacheKey);
 			if (objModel == null)
 			{
@@ -124,7 +124,15 @@ namespace AutekInfo.BLL {
 					model.emp_id=int.Parse(dt.Rows[n]["emp_id"].ToString());
 				}
 																																				model.emp_cnname= dt.Rows[n]["emp_cnname"].ToString();
-																						
+																												if(dt.Rows[n]["m_emp_role_id"].ToString()!="")
+				{
+					model.m_emp_role_id=int.Parse(dt.Rows[n]["m_emp_role_id"].ToString());
+				}
+																																if(dt.Rows[n]["role_id"].ToString()!="")
+				{
+					model.role_id=int.Parse(dt.Rows[n]["role_id"].ToString());
+				}
+																										
 				
 					modelList.Add(model);
 				}

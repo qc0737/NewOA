@@ -52,6 +52,24 @@ namespace AutekInfo.Model{
             get{ return _emp_cnname; }
             set{ _emp_cnname = value; }
         }        
+		/// <summary>
+		/// m_emp_role_id
+        /// </summary>		
+		private int _m_emp_role_id;
+        public int m_emp_role_id
+        {
+            get{ return _m_emp_role_id; }
+            set{ _m_emp_role_id = value; }
+        }        
+		/// <summary>
+		/// role_id
+        /// </summary>		
+		private int _role_id;
+        public int role_id
+        {
+            get{ return _role_id; }
+            set{ _role_id = value; }
+        }        
 		   
 	}
 }

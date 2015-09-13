@@ -7,11 +7,306 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Role2Emp</title>
+    @Styles.Render("~/Content/jquery-easyui-1.4.3/themes/default/css")
+    @Styles.Render("~/Content/autek/Style/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/blockUI")
+    @Scripts.Render("~/bundles/homemenu")
+    <title></title>
+    <script type="text/javascript">
+        $(function () {
+            $('#role2emp').datagrid({
+                url: '/SystemManage/GetEmp2Roles',
+                rownumbers: true,
+                toolbar: '#toobar',
+                columns: [[
+                {
+                    field: 'm_emp_role_id',
+                    title: 'ID',
+                    width: 100,
+                    checkbox: true
+                },
+                
+                {
+                    field: 'emp_cnname',
+                    title: '姓名',
+                    align: 'left',
+                    width: 100
+                },
+                {
+                    field: 'role_code',
+                    title: '角色代码',
+                    align: 'left',
+                    width: 100
+                },
+                {
+                    field: 'role_name',
+                    title: '角色名',
+                    align: 'left',
+                    width: 100
+                },
+                {
+                    field: 'role_describe',
+                    title: '角色说明',
+                    align: 'left',
+                    width: 100
+                }
+                
+                ]],
+                sortName: 'emp_cnname',
+                pagination: true,
+                pageNumber: 1,
+                pageSize: parseInt(($(window).height() - 100) / 25),
+                pageList: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50],
+                fit: true,
+                fitColumns: true,
+                idField: 'm_emp_role_id',
+                nowrap: true,
+                sortOrder: 'asc',
+                fitColumns: false
+            });
+            $('.datagrid-header div').css('text-align', 'center');
+        });
+
+        function add() {
+
+            $('#dd').dialog({
+                title: 'My Dialog',
+                width: 400,
+                height: 400,
+                closed: false,
+                cache: false,
+                href: '/SystemManage/GetEmps',
+                modal: true
+            });
+            //$('#setrole2emp').show().dialog({
+            //    title: '分配角色',
+            //    iconCls: 'pic pic_34',
+            //    closable: true,
+            //    width: 500,
+            //    height: 300,
+            //    closed: false,
+            //    cache: false,
+            //    modal: true,
+            //    resizable: false,
+            //    buttons: [
+            //            {
+            //                text: '确定',
+            //                iconCls: 'pic pic_123',
+            //                handler: function () {
+            //                    if ($('#frm').form('validate')) {
+            //                        var data = $('#frm').serialize();
+            //                        $('#frm').block({
+            //                            message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
+            //                            css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
+            //                        });
+            //                        $.post(
+            //                        '/SystemManage/AddRoles',
+            //                        data,
+            //                        function (r) {
+            //                            if (r >0) {
+            //                                $('#frm').unblock();
+            //                                parent.$.messager.show({
+            //                                    title: '提示',
+            //                                    msg: '保存成功！',
+            //                                    timeout: 5000,
+            //                                    showType: 'slide'
+            //                                });
+            //                                $('#role2emp').datagrid('reload');
+            //                            } else {
+            //                                $('#frm').unblock();
+            //                                $.messager.alert('警告', '保存失败！' + r, 'error');
+            //                            }
+            //                        },
+            //                        'text'
+            //                        );
+            //                        $('#setrole2emp').dialog('close');
+            //                    }
+            //                }
+            //            }]
+            //});
+        };
+        function edit() {
+            var rows = $('#role2emp').datagrid('getSelections');
+            if (rows.length != 1) {
+                parent.$.messager.show({
+                    title: '提示',
+                    msg: '请选择一行编辑！',
+                    timeout: 5000,
+                    showType: 'slide'
+                });
+                $('#role2emp').datagrid('clearSelections');
+                return;
+            }
+            $('#setrole2emp').show().dialog({
+                title: '编辑角色',
+                iconCls: 'pic pic_95',
+                closable: true,
+                width: 500,
+                height: 300,
+                closed: false,
+                cache: false,
+                modal: true,
+                resizable: false,
+                buttons: [
+                        {
+                            text: '确定',
+                            iconCls: 'pic pic_123',
+                            handler: function () {
+                                if ($('#frm').form('validate')) {
+                                    var data = $('#frm').serialize();
+                                    $('#frm').block({
+                                        message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
+                                        css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
+                                    });
+                                    $.post(
+                                    '/SystemManage/EditRoles?role_id=' + rows[0].role_id,
+                                    data,
+                                    function (r) {
+                                        if (r == 'true') {
+                                            $('#frm').unblock();
+                                            parent.$.messager.show({
+                                                title: '提示',
+                                                msg: '保存成功！',
+                                                timeout: 5000,
+                                                showType: 'slide'
+                                            });
+                                            $('#role2emp').datagrid('reload');
+                                        } else {
+                                            $('#frm').unblock();
+                                            $.messager.alert('警告', '保存失败！' + r, 'error');
+                                        }
+                                    },
+                                    'text'
+                                    );
+                                    $('#setrole2emp').dialog('close');
+                                }
+                            }
+                        }],
+                onOpen: function () {
+                    $('#role_code').val(rows[0].role_code);
+                    $('#role_name').val(rows[0].role_name);
+                    $('#role_describe').val(rows[0].role_describe);
+                }
+            });
+        };
+        function del() {
+            var rows = $('#role2emp').datagrid('getSelections');
+            if (rows.length > 0) {
+                $.messager.confirm('确认', '确定要删除吗？', function (b) {
+                    if (b) {
+                        var ids = [];
+                        for (i = 0; i < rows.length; i++) {
+                            ids.push(rows[i].role_id);
+                        }
+                        var strIds = ids.join(',');
+                        $('#frm').block({
+                            message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
+                            css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
+                        });
+                        $.post('/SystemManage/DelRoles?ids=' + strIds, function (r) {
+                            if (r == 'true') {
+                                $('#frm').unblock();
+                                parent.$.messager.show({
+                                    title: '提示',
+                                    msg: '删除成功！',
+                                    timeout: 5000,
+                                    showType: 'slide'
+                                });
+                                $('#role2emp').datagrid('reload');
+                            }  else {
+                                $('#frm').unblock();
+                                $.messager.alert('消息', '删除失败!', 'info');
+                            }
+                            $('#role2emp').datagrid('clearSelections');
+                        }
+                    );
+                    }
+                })
+            } else {
+                parent.$.messager.show({
+                    title: '提示',
+                    msg: '请选择要删除的行！',
+                    timeout: 5000,
+                    showType: 'slide'
+                });
+            }
+        };
+        function reload() {
+            $('#role2emp').datagrid('reload');
+            $('#role2emp').datagrid('clearSelections');
+        };
+        function output() {
+           window.location.href = '/SystemManage/OutPutRoles';
+
+        };
+        function cancel() {
+            $('#role2emp').datagrid('clearSelections');
+        }
+    </script>
 </head>
 <body>
-    <div>
-        rrrr
+    <div id="toobar" style="border:none;">
+        <div style="float: left;">
+            <a href="javascript:add()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_34">新增</a>
+        </div>
+        <div class="datagrid-btn-separator"></div>
+        <div style="float: left;">
+            <a href="javascript:edit()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_95">修改</a>
+        </div>
+        <div class="datagrid-btn-separator"></div>
+        <div style="float: left;">
+            <a href="javascript:del()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_36">删除</a>
+        </div>
+        <div class="datagrid-btn-separator"></div>
+        <div style="float: left;">
+            <a href="javascript:cancel()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_118">取消选择</a>
+        </div>
+        <div class="datagrid-btn-separator"></div>
+        <div style="float: left;">
+            <a href="javascript:reload()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_203">刷新</a>
+        </div>
+        <div class="datagrid-btn-separator"></div>
+        <div style="float: left;">
+            <a href="javascript:output()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_202">导出</a>
+        </div>
+        <div style="float: right;padding-top:5px;">
+            <input id="ss" class="easyui-searchbox" style="width:200px;float:right;" data-options="searcher:'',prompt:'输入关键字查询'" />
+        </div>
     </div>
+    <table id="role2emp"></table>
+    <div id="setrole2emp" style="display: none; overflow: hidden; padding: 2px;">
+        <form id="frm">
+            <table>
+                <tr>
+                    <td style="width: 100px;">
+                        角色代码：
+                    </td>
+                    <td style="width: 300px;">
+                        <input type="text" id="role_code" name="role_code" class="easyui-validatebox" data-options="required:true,validType:'unnormal'"
+                               style="width: 250px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 100px;">
+                        角色名称：
+                    </td>
+                    <td style="width: 300px;">
+                        <input id="role_name" name="role_name" type="text" style="width: 250px;" class="easyui-validatebox"
+                               data-options="required:true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 100px;">
+                        角色说明：
+                    </td>
+                    <td style="width: 300px;">
+                        <textarea name="role_describe" id="role_describe" style="width: 250px;"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="dd">Dialog Content.</div>
 </body>
 </html>

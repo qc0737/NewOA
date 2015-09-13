@@ -30,9 +30,9 @@ namespace AutekInfo.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("insert into View_Emp_Role(");			
-            strSql.Append("role_code,role_name,role_describe,emp_id,emp_cnname");
+            strSql.Append("role_code,role_name,role_describe,emp_id,emp_cnname,m_emp_role_id,role_id");
 			strSql.Append(") values (");
-            strSql.Append("@role_code,@role_name,@role_describe,@emp_id,@emp_cnname");            
+            strSql.Append("@role_code,@role_name,@role_describe,@emp_id,@emp_cnname,@m_emp_role_id,@role_id");            
             strSql.Append(") ");            
             		
 			SqlParameter[] parameters = {
@@ -40,7 +40,9 @@ namespace AutekInfo.DAL
                         new SqlParameter("@role_name", SqlDbType.NVarChar,50) ,            
                         new SqlParameter("@role_describe", SqlDbType.NVarChar,500) ,            
                         new SqlParameter("@emp_id", SqlDbType.Int,4) ,            
-                        new SqlParameter("@emp_cnname", SqlDbType.NVarChar,100)             
+                        new SqlParameter("@emp_cnname", SqlDbType.NVarChar,100) ,            
+                        new SqlParameter("@m_emp_role_id", SqlDbType.Int,4) ,            
+                        new SqlParameter("@role_id", SqlDbType.Int,4)             
               
             };
 			            
@@ -49,6 +51,8 @@ namespace AutekInfo.DAL
             parameters[2].Value = model.role_describe;                        
             parameters[3].Value = model.emp_id;                        
             parameters[4].Value = model.emp_cnname;                        
+            parameters[5].Value = model.m_emp_role_id;                        
+            parameters[6].Value = model.role_id;                        
 			            DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
             			
 		}
@@ -66,7 +70,9 @@ namespace AutekInfo.DAL
             strSql.Append(" role_name = @role_name , ");                                    
             strSql.Append(" role_describe = @role_describe , ");                                    
             strSql.Append(" emp_id = @emp_id , ");                                    
-            strSql.Append(" emp_cnname = @emp_cnname  ");            			
+            strSql.Append(" emp_cnname = @emp_cnname , ");                                    
+            strSql.Append(" m_emp_role_id = @m_emp_role_id , ");                                    
+            strSql.Append(" role_id = @role_id  ");            			
 			strSql.Append(" where  ");
 						
 SqlParameter[] parameters = {
@@ -74,7 +80,9 @@ SqlParameter[] parameters = {
                         new SqlParameter("@role_name", SqlDbType.NVarChar,50) ,            
                         new SqlParameter("@role_describe", SqlDbType.NVarChar,500) ,            
                         new SqlParameter("@emp_id", SqlDbType.Int,4) ,            
-                        new SqlParameter("@emp_cnname", SqlDbType.NVarChar,100)             
+                        new SqlParameter("@emp_cnname", SqlDbType.NVarChar,100) ,            
+                        new SqlParameter("@m_emp_role_id", SqlDbType.Int,4) ,            
+                        new SqlParameter("@role_id", SqlDbType.Int,4)             
               
             };
 						            
@@ -83,6 +91,8 @@ SqlParameter[] parameters = {
             parameters[2].Value = model.role_describe;                        
             parameters[3].Value = model.emp_id;                        
             parameters[4].Value = model.emp_cnname;                        
+            parameters[5].Value = model.m_emp_role_id;                        
+            parameters[6].Value = model.role_id;                        
             int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
 			{
@@ -128,7 +138,7 @@ SqlParameter[] parameters = {
 		{
 			
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select role_code, role_name, role_describe, emp_id, emp_cnname  ");			
+			strSql.Append("select role_code, role_name, role_describe, emp_id, emp_cnname, m_emp_role_id, role_id  ");			
 			strSql.Append("  from View_Emp_Role ");
 			strSql.Append(" where ");
 						SqlParameter[] parameters = {
@@ -148,7 +158,15 @@ SqlParameter[] parameters = {
 					model.emp_id=int.Parse(ds.Tables[0].Rows[0]["emp_id"].ToString());
 				}
 																																				model.emp_cnname= ds.Tables[0].Rows[0]["emp_cnname"].ToString();
-																										
+																												if(ds.Tables[0].Rows[0]["m_emp_role_id"].ToString()!="")
+				{
+					model.m_emp_role_id=int.Parse(ds.Tables[0].Rows[0]["m_emp_role_id"].ToString());
+				}
+																																if(ds.Tables[0].Rows[0]["role_id"].ToString()!="")
+				{
+					model.role_id=int.Parse(ds.Tables[0].Rows[0]["role_id"].ToString());
+				}
+																														
 				return model;
 			}
 			else
