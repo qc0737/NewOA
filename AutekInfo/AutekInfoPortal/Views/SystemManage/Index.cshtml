@@ -16,7 +16,7 @@
     <script type="text/javascript">
         $(function () {
             $.post(
-                '/SystemManage/GetO',
+                '/SystemManage/GetO?node=1',
                 function (data) {
                     $('#depttree').tree({
                         data: data,

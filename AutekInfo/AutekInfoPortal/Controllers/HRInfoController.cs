@@ -42,7 +42,7 @@ namespace AutekInfoPortal.Controllers
             var list=new List<AutekInfo.Model.View_Employee_Info>();
             if (!String.IsNullOrEmpty(keyw))
             {
-                list = b.GetModelList("-1", String.Format(" ( emp_cnname like '%{0}%' or emp_worknum like '%{0}% or emp_email like '{0}') and emp_isonworking = '是'", emp_dept), order);
+                list = b.GetModelList("-1", String.Format(" ( emp_cnname like '%{0}%' or emp_worknum like '%{0}%' or emp_email like '{0}') and emp_isonworking = '是'", keyw), order);
             }
             else if (!String.IsNullOrEmpty(emp_dept))
             {

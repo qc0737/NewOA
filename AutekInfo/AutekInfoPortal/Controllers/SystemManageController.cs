@@ -24,11 +24,15 @@ namespace AutekInfoPortal.Controllers
         #region Dept
         public string GetO()
         {
-
+            string opennode = Request["node"];
             int pid = 0;//int.Parse(Request["id"].ToString());
             List<AutekInfo.Model.Emp_Dept> list = new AutekInfo.BLL.Emp_Dept().GetModelList("").OrderBy(dept => dept.dept_order).ThenBy(dept => dept.dept_name).ToList();
             JsonHelper js = new JsonHelper();
             string json = new JsonHelper().GetOcharTree<AutekInfo.Model.Emp_Dept>(list, "dept_id", "dept_pid", "dept_name", pid);
+            if (!String.IsNullOrEmpty(opennode))
+            {
+                json=json.Replace("\"text\":\"公司\",\"state\":\"closed\"", "\"text\":\"公司\",\"state\":\"open\"");
+            }
             return json;
         }
         public string ChangeDeptOchar()

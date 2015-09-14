@@ -1,4 +1,4 @@
-﻿;@{
+﻿@{
     Layout = null;
 }
 
@@ -67,121 +67,54 @@
             });
             $('.datagrid-header div').css('text-align', 'center');
         });
-        function qq(value, name) {
-            alert(value + ":" + name)
-        }
-        function add() {
 
-            $('#dd').dialog({
-                title: '选择人员',
-                width: 800,
-                height: 600,
-                iconCls: 'pic pic_59',
+        function add() {
+            $('#setrole2emp').show().dialog({
+                title: '分配角色',
+                iconCls: 'pic pic_34',
+                closable: true,
+                width: 500,
+                height: 300,
                 closed: false,
                 cache: false,
-                //href: '/SystemManage/GetEmps',
                 modal: true,
-                buttons: [{
-                    text: 'Save',
-                    handler: function () {
-                        var tg = $('#depttree').tree('getRoot').target;
-                        console.info(tg);
-                        $('#depttree').tree('expand', tg);
-                    }
-                }, {
-                    text: 'Close',
-                    handler: function () {
-                    }
-                }],
-                onOpen: function () {
-                    $('#depttree').tree({
-                        url: '/SystemManage/GetO',
-                        dnd: true,
-                        animate: true,
-                        onClick: function (node) {
-                            $('#depttree').tree('toggle', node.target);
-                            if (node.text!='公司'){
-                                selectemp(node.text);
+                resizable: false,
+                buttons: [
+                        {
+                            text: '确定',
+                            iconCls: 'pic pic_123',
+                            handler: function () {
+                                if ($('#frm').form('validate')) {
+                                    var data = $('#frm').serialize();
+                                    $('#frm').block({
+                                        message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
+                                        css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
+                                    });
+                                    $.post(
+                                    '/SystemManage/AddRoles',
+                                    data,
+                                    function (r) {
+                                        if (r > 0) {
+                                            $('#frm').unblock();
+                                            parent.$.messager.show({
+                                                title: '提示',
+                                                msg: '保存成功！',
+                                                timeout: 5000,
+                                                showType: 'slide'
+                                            });
+                                            $('#role2emp').datagrid('reload');
+                                        } else {
+                                            $('#frm').unblock();
+                                            $.messager.alert('警告', '保存失败！' + r, 'error');
+                                        }
+                                    },
+                                    'text'
+                                    );
+                                    $('#setrole2emp').dialog('close');
+                                }
                             }
-                            
-                        }
-                    });
-                    $('#dl').datalist({
-                       url: '/HRInfo/GetEmpListBySF?fields=emp_id,emp_cnname&top=20&order=emp_cnname',
-                        checkbox: true,
-                        lines: false,
-                        valueField: 'emp_id',
-                        textField: 'emp_cnname',
-                        singleSelect: false
-                    });
-                }//,
-                //onOpen: function () {
-                //    var tg = $('#depttree').tree('getRoot').target;
-                //    console.info(tg);
-                //    $('#depttree').tree('expand', tg);
-
-               // }
+                        }]
             });
-
-            function selectemp(dept, key) {
-                var keyword = $('#ss').searchbox('getValue');
-                $('#dl').datalist('load', {
-                    emp_dept: dept,
-                    keyw: keyword
-                });
-
-                //$('#dg').datagrid('load', {
-                //    code: '01',
-                //    name: 'name01'
-                //});
-
-            }
-            //$('#setrole2emp').show().dialog({
-            //    title: '分配角色',
-            //    iconCls: 'pic pic_34',
-            //    closable: true,
-            //    width: 500,
-            //    height: 300,
-            //    closed: false,
-            //    cache: false,
-            //    modal: true,
-            //    resizable: false,
-            //    buttons: [
-            //            {
-            //                text: '确定',
-            //                iconCls: 'pic pic_123',
-            //                handler: function () {
-            //                    if ($('#frm').form('validate')) {
-            //                        var data = $('#frm').serialize();
-            //                        $('#frm').block({
-            //                            message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
-            //                            css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
-            //                        });
-            //                        $.post(
-            //                        '/SystemManage/AddRoles',
-            //                        data,
-            //                        function (r) {
-            //                            if (r >0) {
-            //                                $('#frm').unblock();
-            //                                parent.$.messager.show({
-            //                                    title: '提示',
-            //                                    msg: '保存成功！',
-            //                                    timeout: 5000,
-            //                                    showType: 'slide'
-            //                                });
-            //                                $('#role2emp').datagrid('reload');
-            //                            } else {
-            //                                $('#frm').unblock();
-            //                                $.messager.alert('警告', '保存失败！' + r, 'error');
-            //                            }
-            //                        },
-            //                        'text'
-            //                        );
-            //                        $('#setrole2emp').dialog('close');
-            //                    }
-            //                }
-            //            }]
-            //});
         };
         function edit() {
             var rows = $('#role2emp').datagrid('getSelections');
@@ -300,14 +233,61 @@
         function cancel() {
             $('#role2emp').datagrid('clearSelections');
         }
-        function search() {
+        function chooseemp() {
+            parent.$('#dd').dialog({
+                title: '选择人员',
+                width: 800,
+                height: 600,
+                iconCls: 'pic pic_59',
+                closed: false,
+                cache: false,
+                modal: true,
+                buttons: [{
+                    text: '确定',
+                    iconCls: 'pic pic_123',
+                    handler: function () {
+                        var select = parent.$('#dl').datalist('getSelections');
+                        var emp_ids = '';
+                        var emp_cnnames='';
+                        $.each(select, function (i, n) {
+                            emp_ids = emp_ids + n.emp_id + ','
+                            emp_cnnames = emp_cnnames + n.emp_cnname + ','
+                        });
+                        $('#emp_ids').val(emp_ids);
+                        $('#emp').val(emp_cnnames);
+                        parent.$('#dd').dialog('close');
+                    }
+                }],
+                onOpen: function () {
+                    parent.$('#depttree').tree({
+                        url: '/SystemManage/GetO?node=1',
+                        dnd: true,
+                        animate: true,
+                        onClick: function (node) {
+                            parent.$('#depttree').tree('toggle', node.target);
+                            if (node.text != '公司') {
+                                parent.selectemp(node.text);
+                            }
 
-        }
-        function sall() {
-            $('#dl').datalist('selectAll');
-        }
-        function notall() {
-            $('#dl').datalist('unselectAll');
+                        }
+                    });
+                    parent.$('#dl').datalist({
+                        url: '/HRInfo/GetEmpListBySF?fields=emp_id,emp_cnname&top=20&order=emp_cnname',
+                        checkbox: true,
+                        loadMsg: '正在加载数据...',
+                        lines: false,
+                        valueField: 'emp_id',
+                        textField: 'emp_cnname',
+                        singleSelect: false
+                    });
+                    parent.$('#ss').searchbox({
+                        searcher: function (value, name) {
+                            parent.selectemp('', value);
+                        },
+                        prompt: '请输入姓名、工号或账号'
+                    });
+                }
+            });
         }
     </script>
 </head>
@@ -346,48 +326,28 @@
             <table>
                 <tr>
                     <td style="width: 100px;">
-                        角色代码：
+                        选择人员：
                     </td>
-                    <td style="width: 300px;">
-                        <input type="text" id="role_code" name="role_code" class="easyui-validatebox" data-options="required:true,validType:'unnormal'"
-                               style="width: 250px;" />
+                    <td style="width: 260px;">
+                        <textarea id="emp" name="emp" style="width: 250px;" readonly="readonly"></textarea>
+                        <input id="emp_ids" name="emp_ids" type="hidden"/>
                     </td>
+                    <td><a href="javascript:chooseemp()">[点我添加】</a></td>
+
                 </tr>
                 <tr>
                     <td style="width: 100px;">
-                        角色名称：
+                        选择角色：
                     </td>
-                    <td style="width: 300px;">
-                        <input id="role_name" name="role_name" type="text" style="width: 250px;" class="easyui-validatebox"
-                               data-options="required:true" />
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width: 100px;">
-                        角色说明：
-                    </td>
-                    <td style="width: 300px;">
-                        <textarea name="role_describe" id="role_describe" style="width: 250px;"></textarea>
+                    <td style="width: 280px;">
+                        <input id="role_name" name="role_name" style="width: 250px;" />
                     </td>
                 </tr>
+
             </table>
         </form>
     </div>
-    <div id="dd" style="padding:2px;">
-        <div>
-            请输入关键字查询：<input id="ss" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-         <b>从列表中选择：</b> <a href="javascript:sall()">[全选]</a> &nbsp;&nbsp; <a href="javascript:notall()">[不选]</a>
-        </div>
-        <div style="float:left;">
-            <ul id="depttree"></ul>
-        </div>
-        <div  style="float:right;width:360px;height:500px">
-            <div id="dl">
-                </div>
-              
-            </div>
 
-    </div>
 
 </body>
 </html>

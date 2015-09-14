@@ -10,10 +10,8 @@
     @Styles.Render("~/Content/autek/Style/css")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/blockUI")
-    @Scripts.Render("~/bundles/homemenu")
-   
-    <script type="text/javascript">
-       
+    @Scripts.Render("~/bundles/homemenu")   
+    <script type="text/javascript">       
     $(function(){
         jQuery("#RightAccordion").accordion({ //初始化accordion
             fillSpace:true,
@@ -59,6 +57,18 @@
                });
            }, "json");
     });
+    function sall() {
+        $('#dl').datalist('selectAll');
+    }
+    function notall() {
+        $('#dl').datalist('unselectAll');
+    }
+    function selectemp(dept, key) {
+        $('#dl').datalist('load', {
+            emp_dept: dept,
+            keyw: key
+        });
+    }
     </script>
 
 </head>
@@ -117,6 +127,21 @@
         </div>
         <div id="menu" class="easyui-menu" style="width: 150px;">
         </div>
+    </div>
+    <div id="dd" style="padding:2px;">
+        <div>
+            请输入关键字查询：<input id="ss" style="width:300px;" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <b>从列表中选择：</b> <a href="javascript:sall()">[全选]</a> &nbsp;&nbsp; <a href="javascript:notall()">[不选]</a>
+        </div>
+        <div style="float:left;">
+            <ul id="depttree"></ul>
+        </div>
+        <div style="float:right;width:360px;height:500px">
+            <div id="dl">
+            </div>
+
+        </div>
+
     </div>
 </body>
 </html>
