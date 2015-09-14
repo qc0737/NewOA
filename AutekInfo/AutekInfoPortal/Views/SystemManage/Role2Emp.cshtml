@@ -1,4 +1,4 @@
-﻿@{
+﻿;@{
     Layout = null;
 }
 
@@ -26,7 +26,7 @@
                     width: 100,
                     checkbox: true
                 },
-                
+
                 {
                     field: 'emp_cnname',
                     title: '姓名',
@@ -51,7 +51,7 @@
                     align: 'left',
                     width: 100
                 }
-                
+
                 ]],
                 sortName: 'emp_cnname',
                 pagination: true,
@@ -67,18 +67,75 @@
             });
             $('.datagrid-header div').css('text-align', 'center');
         });
-
+        function qq(value, name) {
+            alert(value + ":" + name)
+        }
         function add() {
 
             $('#dd').dialog({
-                title: 'My Dialog',
-                width: 400,
-                height: 400,
+                title: '选择人员',
+                width: 800,
+                height: 600,
+                iconCls: 'pic pic_59',
                 closed: false,
                 cache: false,
-                href: '/SystemManage/GetEmps',
-                modal: true
+                //href: '/SystemManage/GetEmps',
+                modal: true,
+                buttons: [{
+                    text: 'Save',
+                    handler: function () {
+                        var tg = $('#depttree').tree('getRoot').target;
+                        console.info(tg);
+                        $('#depttree').tree('expand', tg);
+                    }
+                }, {
+                    text: 'Close',
+                    handler: function () {
+                    }
+                }],
+                onOpen: function () {
+                    $('#depttree').tree({
+                        url: '/SystemManage/GetO',
+                        dnd: true,
+                        animate: true,
+                        onClick: function (node) {
+                            $('#depttree').tree('toggle', node.target);
+                            if (node.text!='公司'){
+                                selectemp(node.text);
+                            }
+                            
+                        }
+                    });
+                    $('#dl').datalist({
+                       url: '/HRInfo/GetEmpListBySF?fields=emp_id,emp_cnname&top=20&order=emp_cnname',
+                        checkbox: true,
+                        lines: false,
+                        valueField: 'emp_id',
+                        textField: 'emp_cnname',
+                        singleSelect: false
+                    });
+                }//,
+                //onOpen: function () {
+                //    var tg = $('#depttree').tree('getRoot').target;
+                //    console.info(tg);
+                //    $('#depttree').tree('expand', tg);
+
+               // }
             });
+
+            function selectemp(dept, key) {
+                var keyword = $('#ss').searchbox('getValue');
+                $('#dl').datalist('load', {
+                    emp_dept: dept,
+                    keyw: keyword
+                });
+
+                //$('#dg').datagrid('load', {
+                //    code: '01',
+                //    name: 'name01'
+                //});
+
+            }
             //$('#setrole2emp').show().dialog({
             //    title: '分配角色',
             //    iconCls: 'pic pic_34',
@@ -214,7 +271,7 @@
                                     showType: 'slide'
                                 });
                                 $('#role2emp').datagrid('reload');
-                            }  else {
+                            } else {
                                 $('#frm').unblock();
                                 $.messager.alert('消息', '删除失败!', 'info');
                             }
@@ -237,11 +294,20 @@
             $('#role2emp').datagrid('clearSelections');
         };
         function output() {
-           window.location.href = '/SystemManage/OutPutRoles';
+            window.location.href = '/SystemManage/OutPutRoles';
 
         };
         function cancel() {
             $('#role2emp').datagrid('clearSelections');
+        }
+        function search() {
+
+        }
+        function sall() {
+            $('#dl').datalist('selectAll');
+        }
+        function notall() {
+            $('#dl').datalist('unselectAll');
         }
     </script>
 </head>
@@ -271,7 +337,7 @@
             <a href="javascript:output()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_202">导出</a>
         </div>
         <div style="float: right;padding-top:5px;">
-            <input id="ss" class="easyui-searchbox" style="width:200px;float:right;" data-options="searcher:'',prompt:'输入关键字查询'" />
+            <input id="ssss" class="easyui-searchbox" style="width:200px;float:right;" data-options="searcher:'',prompt:'输入关键字查询'" />
         </div>
     </div>
     <table id="role2emp"></table>
@@ -307,6 +373,21 @@
             </table>
         </form>
     </div>
-    <div id="dd">Dialog Content.</div>
+    <div id="dd" style="padding:2px;">
+        <div>
+            请输入关键字查询：<input id="ss" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         <b>从列表中选择：</b> <a href="javascript:sall()">[全选]</a> &nbsp;&nbsp; <a href="javascript:notall()">[不选]</a>
+        </div>
+        <div style="float:left;">
+            <ul id="depttree"></ul>
+        </div>
+        <div  style="float:right;width:360px;height:500px">
+            <div id="dl">
+                </div>
+              
+            </div>
+
+    </div>
+
 </body>
 </html>

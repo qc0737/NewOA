@@ -7,11 +7,35 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/jquery-easyui-1.4.3/themes/default/css")
+    @Styles.Render("~/Content/autek/Style/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/blockUI")
+    @Scripts.Render("~/bundles/homemenu")
     <title>GetEmps</title>
+    <script type="text/javascript">
+        //$(function () {
+        //    alert('ttt');
+        //    $.post(
+        //    '/SystemManage/GetO',
+        //    function (data) {
+        //        $('#depttree').tree({
+        //            data: data,
+        //            dnd: true,
+        //            animate: true,
+        //            onClick: function (node) {
+        //                $('#depttree').tree('toggle', node.target);
+        //            }                    
+        //        })
+        //    },
+        //    'json'
+        //    )
+        //})
+    </script>
 </head>
 <body>
     <div>
-  加载人员信息.
+        <ul id="depttree"></ul>
     </div>
 </body>
 </html>

@@ -289,6 +289,17 @@ SqlParameter[] parameters = {
         {
             return DbHelperSQL.GetRecordByPage("View_Employee_Info",id, fields, sort, pagesize, page, strWhere, sorttype, out tcount);
         }
+        public DataSet GetList(string feilds, string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select  " + feilds);
+            strSql.Append(" FROM View_Employee_Info ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            return DbHelperSQL.Query(strSql.ToString());
+        }
         #endregion
     }
 }

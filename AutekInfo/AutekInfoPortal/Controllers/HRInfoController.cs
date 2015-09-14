@@ -31,5 +31,33 @@ namespace AutekInfoPortal.Controllers
             return Content(json);
         }
 
+        public ContentResult GetEmpListBySF()
+        {
+            string fields = Request["fields"];
+            string top = Request["top"];
+            string order = Request["order"];
+            string emp_dept = Request["emp_dept"];
+            string keyw = Request["keyw"];
+            var b = new AutekInfo.BLL.View_Employee_Info();
+            var list=new List<AutekInfo.Model.View_Employee_Info>();
+            if (!String.IsNullOrEmpty(keyw))
+            {
+                list = b.GetModelList("-1", String.Format(" ( emp_cnname like '%{0}%' or emp_worknum like '%{0}% or emp_email like '{0}') and emp_isonworking = '是'", emp_dept), order);
+            }
+            else if (!String.IsNullOrEmpty(emp_dept))
+            {
+                list = b.GetModelList("-1", String.Format(" emp_dept='{0}' and emp_isonworking = '是'", emp_dept), order);
+            }
+            else
+            {
+                list = b.GetModelList(top, " emp_isonworking = '是'", order);
+            }
+            
+            //var list = b.GetModelList(" emp_isonworking='是' ");
+            string[] arr_f = fields.Split(',');
+            string json = AutekInfo.Common.JsonHelper.GetPartAttr(list, arr_f);
+            return Content(json);
+        }
+
     }
 }

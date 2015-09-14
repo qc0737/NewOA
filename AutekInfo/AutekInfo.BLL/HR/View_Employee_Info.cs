@@ -166,7 +166,14 @@ namespace AutekInfo.BLL {
             DataSet ds = dal.GetModelListByPages(fields,id, sort, pagesize,  page,   strWhere,sorttype,out tcount);
             return DataTableToList(ds.Tables[0]);
         }
+        public List<AutekInfo.Model.View_Employee_Info> GetModelList(string top,string strWhere,string order)
+        {
+            DataSet ds = dal.GetList(int.Parse(top), strWhere, order);
+            return DataTableToList(ds.Tables[0]);
+        }
         #endregion
 
+
+        
     }
 }

@@ -825,8 +825,55 @@ namespace AutekInfo.Common
             }
             return JsonString.ToString();
         }
+        /// <summary>
+        /// 序列化部分属性
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="count"></param>
+        /// <param name="datefmt"></param>
+        /// <returns></returns>
+        public static string GetPartAttr<T>(List<T> list, string[] arr_f)
+        {
+            StringBuilder JsonString = new StringBuilder();
+            JsonString.Append("[ ");
+            if (list.Count > 0)
+            {
+                
+                foreach (T t in list)
+                {
+                    JsonString.Append("{");
+                    foreach (string f in arr_f)
+                    {
+                        JsonString.Append("\"" + f + "\":");
+                        if (t.GetType().GetProperty(f).GetValue(t, null).GetType() == typeof(int))
+                        {
+                            JsonString.Append( t.GetType().GetProperty(f).GetValue(t, null) + ",");
+                        }
+                        else
+                        {
+                            JsonString.Append("\"" + t.GetType().GetProperty(f).GetValue(t, null) + "\",");
+                        }
+                        
+                    }
+                    JsonString = JsonString.Remove(JsonString.Length - 1, 1);
+                    if (list.IndexOf(t) == list.Count - 1)
+                    {
+                        JsonString.Append("}");
+                    }
+                    else
+                    {
+                        JsonString.Append("},");
+                    }
+                }
+            }
+            JsonString.Append("]");
+            return JsonString.ToString();
+        }
 
         #endregion
+
+       
     }
     
 
