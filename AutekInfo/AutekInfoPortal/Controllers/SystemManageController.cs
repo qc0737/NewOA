@@ -232,81 +232,247 @@ namespace AutekInfoPortal.Controllers
         }
         public string GetEmp2Roles()
         {
+            string sort = Request["sort"];
+            bool order = Request["order"] == "desc" ? true : false;
             var b = new AutekInfo.BLL.View_Emp_Role();
-            var list = b.GetModelList("");
+            var list = new List<AutekInfo.Model.View_Emp_Role>();
+            if (order)
+            {
+                list = b.GetModelList("").OrderByDescending(o => o.GetType().GetProperty(sort).GetValue(o, null)).ToList();
+            }
+            else
+            {
+                list = b.GetModelList("").OrderBy(o => o.GetType().GetProperty(sort).GetValue(o, null)).ToList();
+            }
             return JsonConvert.SerializeObject(list);
         }
-        public string AddEmp2Roles()
+        public int AddEmp2Roles()
         {
-            string role_code = Request["role_code"].Trim();
-            string role_name = Request["role_name"].Trim();
-            string role_describe = Request["role_describe"].Trim();
-            var b_role = new AutekInfo.BLL.Emp_Roles();
-            var list = b_role.GetModelList(String.Format("role_code='{0}' or role_name='{1}'", role_code, role_name));
-            if (list.Count > 0)
+            int role_id = int.Parse(Request["role_id"].Trim());
+            string emp_ids = Request["emp_ids"].Trim();
+            var b = new AutekInfo.BLL.M_Emp_Role();
+            emp_ids = emp_ids.Remove(emp_ids.Length-1,1);//去掉最后一个逗号
+            string[] arr_ids = emp_ids.Split(',');
+            foreach (string id in arr_ids)
             {
-                return "该角色已存在！";
-            }
-            var m = new AutekInfo.Model.Emp_Roles();
-            m.role_code = role_code;
-            m.role_name = role_name;
-            m.role_describe = role_describe;
-            return b_role.Add(m).ToString();
-        }
-        public string EditEmp2Roles()
-        {
-            int role_id = int.Parse(Request["role_id"].ToString());
-            string role_code = Request["role_code"].ToString().Trim();
-            string role_name = Request["role_name"].ToString().Trim();
-            string role_describe = Request["role_describe"].ToString().Trim();
-            var b_role = new AutekInfo.BLL.Emp_Roles();
-            var m_role = b_role.GetModel(role_id);
-            if (m_role.role_code != role_code || m_role.role_name != role_name)
-            {
-                var _list = b_role.GetModelList(String.Format(" role_name='{0}' or role_code='(1)' ", role_name, role_code));
-                if (_list.Count > 0)
+                var l = b.GetModelList(String.Format(" emp_id={0} and role_id={1}",id,role_id));
+                if (l.Count < 1)
                 {
-                    return "角色名或代码重复！";
-                }
-            }
-            m_role.role_code = role_code;
-            m_role.role_name = role_name;
-            m_role.role_describe = role_describe;
-            return b_role.Update(m_role).ToString().ToLower();
+                    var m = new AutekInfo.Model.M_Emp_Role();
+                    m.emp_id = int.Parse(id);
+                    m.role_id = role_id;
+                    b.Add(m);
+                }                
+            }           
+            return 1;
         }
         public string DelEmp2Roles()
         {
             string ids = Request.QueryString["ids"];
-            var b_role = new AutekInfo.BLL.Emp_Roles();
-            return b_role.DeleteList(ids).ToString().ToLower();
+            var b = new AutekInfo.BLL.M_Emp_Role();
+            return b.DeleteList(ids).ToString().ToLower();
         }
         public ActionResult OutPutEmp2Roles()
         {
             List<AutekInfo.Common.ExcTitvsFeilds> list_excelTitle = new List<AutekInfo.Common.ExcTitvsFeilds>();
-
-
-            list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "ID", feild = "role_id" });
+            list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "ID", feild = "m_emp_role_id" });
+            list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "姓名", feild = "emp_cnname" });
             list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "角色代码", feild = "role_code" });
+            list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "角色名称", feild = "role_name" });
             list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "角色描述", feild = "role_describe" });
-            //list_excelTitle.Add("角色代码");
-            //list_excelTitle.Add("角色名称");
-            //list_excelTitle.Add("角色描述");            
-            var b_role = new AutekInfo.BLL.Emp_Roles();
-            List<AutekInfo.Model.Emp_Roles> list_m = b_role.GetModelList("");
-            // return b_role.DeleteList(ids).ToString().ToLower();
+            var b = new AutekInfo.BLL.View_Emp_Role();
+            List<AutekInfo.Model.View_Emp_Role> list_m = b.GetModelList("");
             string temp_filepath = AutekInfo.Common.ExcelHelper.OutputList(list_excelTitle, list_m);
-            return File(temp_filepath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "导出roles.xlsx");
+            return File(temp_filepath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "导出role2emp.xlsx");
         }       
         #endregion
-#region chsoe
-        public ActionResult SelectEmps()
+        #region chsoe
+                public ActionResult SelectEmps()
+                {
+                    return View();
+                }
+                public ActionResult GetEmps()
+                {
+                    return View();
+                }
+        #endregion
+        #region Authority
+        public ActionResult AuthorityManage()
         {
             return View();
         }
-        public ActionResult GetEmps()
+        public string GetAuthoritys()
+        {
+            var b_Authority = new AutekInfo.BLL.Emp_Authority();
+            var list = b_Authority.GetModelList("");
+            return JsonConvert.SerializeObject(list);
+        }
+        public string AddAuthoritys()
+        {
+            string auth_code = Request["auth_code"].Trim();
+            string auth_name = Request["auth_name"].Trim();
+            string auth_remark = Request["auth_remark"].Trim();
+            var b_Authority = new AutekInfo.BLL.Emp_Authority();
+            var list = b_Authority.GetModelList(String.Format("auth_code='{0}' or auth_name='{1}'", auth_code, auth_name));
+            if (list.Count > 0)
+            {
+                return "该权限已存在！";
+            }
+            var m = new AutekInfo.Model.Emp_Authority();
+            m.auth_code = auth_code;
+            m.auth_name = auth_name;
+            m.auth_remark = auth_remark;
+            return b_Authority.Add(m).ToString();
+        }
+        public string EditAuthoritys()
+        {
+            int auth_id = int.Parse(Request["auth_id"].ToString());
+            string auth_code = Request["auth_code"].ToString().Trim();
+            string auth_name = Request["auth_name"].ToString().Trim();
+            string auth_remark = Request["auth_remark"].ToString().Trim();
+            var b_Authority = new AutekInfo.BLL.Emp_Authority();
+            var m_Authority = b_Authority.GetModel(auth_id);
+            if (m_Authority.auth_code != auth_code || m_Authority.auth_name != auth_name)
+            {
+                var _list = b_Authority.GetModelList(String.Format(" auth_name='{0}' or auth_code='(1)' ", auth_name, auth_code));
+                if (_list.Count > 0)
+                {
+                    return "权限名或代码重复！";
+                }
+            }
+            m_Authority.auth_code = auth_code;
+            m_Authority.auth_name = auth_name;
+            m_Authority.auth_remark = auth_remark;
+            return b_Authority.Update(m_Authority).ToString().ToLower();
+        }
+        public string DelAuthoritys()
+        {
+            string ids = Request.QueryString["ids"];
+            var b_Authority = new AutekInfo.BLL.Emp_Authority();
+            return b_Authority.DeleteList(ids).ToString().ToLower();
+        }
+        public ActionResult OutPutAuthoritys()
+        {
+            List<AutekInfo.Common.ExcTitvsFeilds> list_excelTitle = new List<AutekInfo.Common.ExcTitvsFeilds>();
+
+
+            list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "ID", feild = "auth_id" });
+            list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "权限代码", feild = "auth_code" });
+            list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "权限描述", feild = "auth_remark" });
+                               
+            var b_Authority = new AutekInfo.BLL.Emp_Authority();
+            List<AutekInfo.Model.Emp_Authority> list_m = b_Authority.GetModelList("");
+            // return b_Authority.DeleteList(ids).ToString().ToLower();
+            string temp_filepath = AutekInfo.Common.ExcelHelper.OutputList(list_excelTitle, list_m);
+            return File(temp_filepath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "导出Authoritys.xlsx");
+        }
+
+        #endregion
+        #region Menu2Auth
+        public ActionResult Menu2Auth()
         {
             return View();
         }
-#endregion
+        public string GetMenu2Auth()
+        {
+
+            var all_m = HomeController.list_all;
+            StringBuilder sb = new StringBuilder();
+            string id = Request["id"];
+            var b = new AutekInfo.BLL.Menu();
+            var b_Menu_Option = new AutekInfo.BLL.View_Menu_Option();
+            sb.Append("[");
+            if (String.IsNullOrEmpty(id))//没有传id,则是默认顶级目录
+            {
+
+                List<AutekInfo.Model.Menu> list_menu = all_m.FindAll(menu => menu.menu_pid == 0);
+                
+                foreach (var menu in list_menu)
+                {
+                    sb.Append("{");
+                    sb.Append("\"id\":\"" + menu.menu_id + "\",");
+                    sb.Append("\"menu_id\":\"" + menu.menu_id + "\",");
+                    sb.Append("\"menu_name\":\"" + menu.menu_name + "\",");
+                    sb.Append("\"menu_option\":\"\",");
+                    sb.Append("\"state\":\"closed\"},");
+                   
+                }
+                sb.Remove(sb.Length - 1, 1);
+            }
+            else//传了id  
+            {
+                List<AutekInfo.Model.Menu> list_menu_hasid = all_m.FindAll(menu => menu.menu_pid == int.Parse(id));
+
+                foreach (var m in list_menu_hasid)
+                {
+                    sb.Append("{");
+                    sb.Append("\"id\":\"" + m.menu_id + "\",");
+                    sb.Append("\"menu_id\":\"" + m.menu_id + "\",");
+                    sb.Append("\"menu_name\":\"" + m.menu_name + "\",");
+                    if (all_m.FindAll(menu => menu.menu_pid == m.menu_id).Count > 0)
+                    {
+                        sb.Append("\"state\":\"closed\"},");
+                    }
+                    else
+                    {
+                        var list_option=b_Menu_Option.GetModelList(" menu_id= " + m.menu_id);
+                        if (list_option.Count > 0)
+                        {
+
+                        }
+                        sb.Append("\"menu_option\":\"增加<input type='checkbox' />\",");
+                        sb.Append("\"state\":\"open\"},");
+                        
+                    }
+                }
+
+                if (sb.Length > 1)
+                {
+                    sb.Remove(sb.Length - 1, 1);
+                }
+            }
+            sb.Append("]");
+            return sb.ToString();
+        }
+        //public int AddEmp2Roles()
+        //{
+        //    int role_id = int.Parse(Request["role_id"].Trim());
+        //    string emp_ids = Request["emp_ids"].Trim();
+        //    var b = new AutekInfo.BLL.M_Emp_Role();
+        //    emp_ids = emp_ids.Remove(emp_ids.Length - 1, 1);//去掉最后一个逗号
+        //    string[] arr_ids = emp_ids.Split(',');
+        //    foreach (string id in arr_ids)
+        //    {
+        //        var l = b.GetModelList(String.Format(" emp_id={0} and role_id={1}", id, role_id));
+        //        if (l.Count < 1)
+        //        {
+        //            var m = new AutekInfo.Model.M_Emp_Role();
+        //            m.emp_id = int.Parse(id);
+        //            m.role_id = role_id;
+        //            b.Add(m);
+        //        }
+        //    }
+        //    return 1;
+        //}
+        //public string DelEmp2Roles()
+        //{
+        //    string ids = Request.QueryString["ids"];
+        //    var b = new AutekInfo.BLL.M_Emp_Role();
+        //    return b.DeleteList(ids).ToString().ToLower();
+        //}
+        //public ActionResult OutPutEmp2Roles()
+        //{
+        //    List<AutekInfo.Common.ExcTitvsFeilds> list_excelTitle = new List<AutekInfo.Common.ExcTitvsFeilds>();
+        //    list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "ID", feild = "m_emp_role_id" });
+        //    list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "姓名", feild = "emp_cnname" });
+        //    list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "角色代码", feild = "role_code" });
+        //    list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "角色名称", feild = "role_name" });
+        //    list_excelTitle.Add(new AutekInfo.Common.ExcTitvsFeilds() { title = "角色描述", feild = "role_describe" });
+        //    var b = new AutekInfo.BLL.View_Emp_Role();
+        //    List<AutekInfo.Model.View_Emp_Role> list_m = b.GetModelList("");
+        //    string temp_filepath = AutekInfo.Common.ExcelHelper.OutputList(list_excelTitle, list_m);
+        //    return File(temp_filepath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "导出role2emp.xlsx");
+        //}
+        #endregion
     }
 }

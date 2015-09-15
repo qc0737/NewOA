@@ -128,7 +128,7 @@ SqlParameter[] parameters = {
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("delete from M_Emp_Role ");
-			strSql.Append(" where ID in ("+m_emp_role_idlist + ")  ");
+            strSql.Append(" where m_emp_role_id in (" + m_emp_role_idlist + ")  ");
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString());
 			if (rows > 0)
 			{

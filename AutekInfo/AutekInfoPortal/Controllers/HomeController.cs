@@ -13,7 +13,7 @@ namespace AutekInfoPortal.Controllers
 {
     public class HomeController : Controller
     {
-        static List<AutekInfo.Model.Menu> list_all = new AutekInfo.BLL.Menu().GetModelList(" menu_isshow=1 ");
+        public static List<AutekInfo.Model.Menu> list_all = new AutekInfo.BLL.Menu().GetModelList(" menu_isshow=1 ");
         public ActionResult Index()
         {
 

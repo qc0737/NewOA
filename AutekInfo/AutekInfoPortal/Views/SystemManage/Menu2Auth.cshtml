@@ -1,0 +1,71 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/jquery-easyui-1.4.3/themes/default/css")
+    @Styles.Render("~/Content/autek/Style/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/blockUI")
+    @Scripts.Render("~/bundles/homemenu")
+    <title></title>
+    <script type="text/javascript">
+        $(function () {
+            $('#auth').combobox({
+                url: '/SystemManage/GetAuthoritys',
+                editable: false,
+                valueField: 'auth_id',
+                textField: 'auth_name'
+            });
+            $('#filelist').treegrid({
+                nowrap: true,
+                rownumbers: true,
+                height: 800,
+                url: '/SystemManage/GetMenu2Auth',
+                idField: 'menu_id',
+                treeField: 'menu_name',
+                columns: [[
+                            {
+                                title: '菜单',
+                                field: 'menu_name',
+                                width: 200
+                            },
+                            {
+                                title: '菜单目录可见',
+                                field: 'id',
+                                width: 200,
+                                formatter: function (value, row, index) {
+                                    return '<input type="checkbox" id="c_' + value + '" name="c_' + value + '" onclick=""></checkbox>';
+                                }
+                            },
+                             {
+                                 title: '基层菜单权限',
+                                 field: 'menu_option',
+                                 width: 200
+                                 //,
+                                 //formatter: function (value, row, index) {
+                                 //    return '<input type="checkbox" id="c_' + value + '" name="c_' + value + '" onclick=""></checkbox>';
+                                 //}
+                             }
+
+                ]]
+
+            });
+        });
+    </script>
+</head>
+<body>
+    <div>
+      <b>选择一个权限：</b>  <input id="auth" name="auth" style="width: 250px;" />
+    </div>
+    <br />
+    <div>
+        <table id="filelist"></table>
+       
+    </div>
+</body>
+</html>
