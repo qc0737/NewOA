@@ -34,18 +34,11 @@
                                 field: 'menu_name',
                                 width: 200
                             },
-                            {
-                                title: '菜单目录可见',
-                                field: 'id',
-                                width: 200,
-                                formatter: function (value, row, index) {
-                                    return '<input type="checkbox" id="c_' + value + '" name="c_' + value + '" onclick=""></checkbox>';
-                                }
-                            },
+                            
                              {
-                                 title: '基层菜单权限',
+                                 title: '菜单权限',
                                  field: 'menu_option',
-                                 width: 200
+                                 width: 400
                                  //,
                                  //formatter: function (value, row, index) {
                                  //    return '<input type="checkbox" id="c_' + value + '" name="c_' + value + '" onclick=""></checkbox>';
@@ -53,14 +46,59 @@
                              }
 
                 ]]
-
+                
             });
+            $('.datagrid-header div').css('text-align', 'center');
         });
+        function subauth() {
+            var auth_id = $('#auth').combobox('getValue');
+            if (auth_id == '') {
+                parent.$.messager.show({
+                    title: '提示',
+                    msg: '没有选择权限！',
+                    timeout: 5000,
+                    showType: 'slide'
+                });
+                return;
+            }
+            var _checked = $('input[name*="ck_"]:checked');
+            var param = '';
+            $(_checked).each(function () {
+                param = param + this.name+ ',';
+            });
+            parent.$.blockUI({
+                message: '<table><tr><td><img src="../../Contents/Images/loading2.gif"/> </td><td>&nbsp;&nbsp;正在处理数据，请稍候... </td></tr></table>',
+                css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 11px #6599CC' }, timeout: 5000
+            });
+
+            $.post(
+           '/SystemManage/xxx',
+           {
+               menuids: param,
+               auth_id: auth_id
+           },
+           function (r) {
+               if (r == 't') {
+                   parent.$.unblockUI();
+                   parent.$.messager.show({
+                       title: '提示',
+                       msg: '已提交！',
+                       timeout: 5000,
+                       showType: 'slide'
+                   });
+               } else {
+                   parent.$.unblockUI();
+                   $.messager.alert('警告', '提交失败！' + r, 'error');
+               }
+           },
+           'text'
+           );
+        };
     </script>
 </head>
 <body>
     <div>
-      <b>选择一个权限：</b>  <input id="auth" name="auth" style="width: 250px;" />
+      <b>选择一个权限：</b>  <input id="auth" name="auth" style="width: 250px;" /> &nbsp;<a id="btn" href="javascript:subauth()" class="easyui-linkbutton"> 保存</a>
     </div>
     <br />
     <div>

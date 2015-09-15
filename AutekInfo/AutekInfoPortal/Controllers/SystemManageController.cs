@@ -402,9 +402,11 @@ namespace AutekInfoPortal.Controllers
             else//传了id  
             {
                 List<AutekInfo.Model.Menu> list_menu_hasid = all_m.FindAll(menu => menu.menu_pid == int.Parse(id));
-
+                var list_option = new List<AutekInfo.Model.View_Menu_Option>();
+                StringBuilder cbox = new StringBuilder();
                 foreach (var m in list_menu_hasid)
                 {
+                    cbox.Clear();
                     sb.Append("{");
                     sb.Append("\"id\":\"" + m.menu_id + "\",");
                     sb.Append("\"menu_id\":\"" + m.menu_id + "\",");
@@ -415,12 +417,16 @@ namespace AutekInfoPortal.Controllers
                     }
                     else
                     {
-                        var list_option=b_Menu_Option.GetModelList(" menu_id= " + m.menu_id);
+                        list_option = b_Menu_Option.GetModelList(String.Format(" menu_id={0} and option_id is not null ", m.menu_id));
                         if (list_option.Count > 0)
                         {
-
+                            foreach(AutekInfo.Model.View_Menu_Option s in list_option)
+                            {
+                                cbox.Append(String.Format("<input type='checkbox' id='ck_{1}_{2}_{3})' name='ck_{1}_{2}_{3}' />{0}", s.option_name, m.menu_id, s.option_code,s.option_id));
+                            }                            
                         }
-                        sb.Append("\"menu_option\":\"增加<input type='checkbox' />\",");
+                        sb.Append("\"menu_option\":\"" + cbox.ToString()+"\",");
+                        
                         sb.Append("\"state\":\"open\"},");
                         
                     }
