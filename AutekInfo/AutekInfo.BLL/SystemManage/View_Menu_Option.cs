@@ -17,17 +17,14 @@ namespace AutekInfo.BLL {
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists()
-		{
-			return dal.Exists();
-		}
+		
 
 		/// <summary>
 		/// 增加一条数据
 		/// </summary>
-		public void  Add(AutekInfo.Model.View_Menu_Option model)
+		public int  Add(AutekInfo.Model.View_Menu_Option model)
 		{
-						dal.Add(model);
+						return dal.Add(model);
 						
 		}
 
@@ -42,44 +39,51 @@ namespace AutekInfo.BLL {
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool Delete()
+		public bool Delete(int menu_id)
 		{
 			
-			return dal.Delete();
+			return dal.Delete(menu_id);
+		}
+				/// <summary>
+		/// 批量删除一批数据
+		/// </summary>
+		public bool DeleteList(string menu_idlist )
+		{
+			return dal.DeleteList(menu_idlist );
 		}
 		
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public AutekInfo.Model.View_Menu_Option GetModel()
+		public AutekInfo.Model.View_Menu_Option GetModel(int menu_id)
 		{
 			
-			return dal.GetModel();
+			return dal.GetModel(menu_id);
 		}
 
 		/// <summary>
 		/// 得到一个对象实体，从缓存中
 		/// </summary>
-        //public AutekInfo.Model.View_Menu_Option GetModelByCache()
-        //{
+		public AutekInfo.Model.View_Menu_Option GetModelByCache(int menu_id)
+		{
 			
-        //    string CacheKey = "View_Menu_OptionModel-" + ;
-        //    object objModel = AutekInfo.Common.DataCache.GetCache(CacheKey);
-        //    if (objModel == null)
-        //    {
-        //        try
-        //        {
-        //            objModel = dal.GetModel();
-        //            if (objModel != null)
-        //            {
-        //                int ModelCache = AutekInfo.Common.ConfigHelper.GetConfigInt("ModelCache");
-        //                AutekInfo.Common.DataCache.SetCache(CacheKey, objModel, DateTime.Now.AddMinutes(ModelCache), TimeSpan.Zero);
-        //            }
-        //        }
-        //        catch{}
-        //    }
-        //    return (AutekInfo.Model.View_Menu_Option)objModel;
-        //}
+			string CacheKey = "View_Menu_OptionModel-" + menu_id;
+			object objModel = AutekInfo.Common.DataCache.GetCache(CacheKey);
+			if (objModel == null)
+			{
+				try
+				{
+					objModel = dal.GetModel(menu_id);
+					if (objModel != null)
+					{
+						int ModelCache = AutekInfo.Common.ConfigHelper.GetConfigInt("ModelCache");
+						AutekInfo.Common.DataCache.SetCache(CacheKey, objModel, DateTime.Now.AddMinutes(ModelCache), TimeSpan.Zero);
+					}
+				}
+				catch{}
+			}
+			return (AutekInfo.Model.View_Menu_Option)objModel;
+		}
 
 		/// <summary>
 		/// 获得数据列表
@@ -116,19 +120,12 @@ namespace AutekInfo.BLL {
 				for (int n = 0; n < rowsCount; n++)
 				{
 					model = new AutekInfo.Model.View_Menu_Option();					
-																	model.menu_name= dt.Rows[n]["menu_name"].ToString();
-																																model.option_code= dt.Rows[n]["option_code"].ToString();
-																																model.option_name= dt.Rows[n]["option_name"].ToString();
-																																model.option_desc= dt.Rows[n]["option_desc"].ToString();
-																												if(dt.Rows[n]["option_id"].ToString()!="")
-				{
-					model.option_id=int.Parse(dt.Rows[n]["option_id"].ToString());
-				}
-																																if(dt.Rows[n]["menu_id"].ToString()!="")
+													if(dt.Rows[n]["menu_id"].ToString()!="")
 				{
 					model.menu_id=int.Parse(dt.Rows[n]["menu_id"].ToString());
 				}
-																																																if(dt.Rows[n]["menu_isshow"].ToString()!="")
+																																				model.menu_name= dt.Rows[n]["menu_name"].ToString();
+																																												if(dt.Rows[n]["menu_isshow"].ToString()!="")
 				{
 					if((dt.Rows[n]["menu_isshow"].ToString()=="1")||(dt.Rows[n]["menu_isshow"].ToString().ToLower()=="true"))
 					{
@@ -139,7 +136,9 @@ namespace AutekInfo.BLL {
 					model.menu_isshow= false;
 					}
 				}
-																if(dt.Rows[n]["menu_pid"].ToString()!="")
+																				model.menu_option_name= dt.Rows[n]["menu_option_name"].ToString();
+																																model.menu_option_code= dt.Rows[n]["menu_option_code"].ToString();
+																												if(dt.Rows[n]["menu_pid"].ToString()!="")
 				{
 					model.menu_pid=int.Parse(dt.Rows[n]["menu_pid"].ToString());
 				}

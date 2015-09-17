@@ -10,8 +10,8 @@
     @Styles.Render("~/Content/jquery-easyui-1.4.3/themes/default/css")
     @Styles.Render("~/Content/autek/Style/css")
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/blockUI")
-    @Scripts.Render("~/bundles/homemenu")
+    
+    
     <title></title>
     <script type="text/javascript">
         $(function () {
@@ -79,8 +79,7 @@
                                 if ($('#frm').form('validate')) {
                                     var data = $('#frm').serialize();
                                     $('#frm').block({
-                                        message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
-                                        css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
+                                        message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;正在处理数据，请稍候...</div>'
                                     });
                                     $.post(
                                     '/SystemManage/AddRoles',
@@ -138,8 +137,7 @@
                                 if ($('#frm').form('validate')) {
                                     var data = $('#frm').serialize();
                                     $('#frm').block({
-                                        message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
-                                        css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
+                                        message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;正在处理数据，请稍候...</div>'
                                     });
                                     $.post(
                                     '/SystemManage/EditRoles?role_id=' + rows[0].role_id,
@@ -183,8 +181,7 @@
                         }
                         var strIds = ids.join(',');
                         $('#frm').block({
-                            message: '<table><tr><td><img src="../../Content/autek/Images/loading.gif" /></td><td>&nbsp;数据处理中... </td></tr></table>',
-                            css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 10px #6599CC' }
+                            message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;正在处理数据，请稍候...</div>'
                         });
                         $.post('/SystemManage/DelRoles?ids=' + strIds, function (r) {
                             if (r == 'true') {

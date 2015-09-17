@@ -1,0 +1,222 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/jquery-easyui-1.4.3/themes/default/css")
+    @Styles.Render("~/Content/autek/Style/css")
+    @Scripts.Render("~/bundles/jquery")
+    
+    
+    <title></title>
+            <script type="text/javascript">
+        $(function () {
+            $('#menulist').treegrid({
+                nowrap: true,
+                rownumbers: true,
+                height: 800,
+                url: '/SystemManage/GetMenuFun',
+                idField: 'id',
+                treeField: 'menu_name',
+                columns: [[
+                            {
+                                title: '菜单',
+                                field: 'menu_name',
+                                width: 200
+                            },
+
+                             {
+                                 title: '菜单权限',
+                                 field: 'menu_option',
+                                 width: 400
+
+                             }
+
+                ]],
+                toolbar: [
+                   {
+                       text: '编辑',
+                       iconCls: 'pic pic_95',
+                       handler: function () {
+                           Edit();
+
+                       }
+                   },
+                 {
+                     text: '刷新',
+                     iconCls: 'pic pic pic_203',
+                     handler: function () {
+                         
+                         $('#menulist').treegrid('reload');
+                     }
+                 }]
+
+            });
+            $('.treegrid-header div').css('text-align', 'center');
+        });
+        function Edit() {
+            var row = $('#menulist').treegrid('getSelected');
+            var childs = $('#menulist').treegrid('getChildren', row.id);
+            if (childs.length > 0) {
+                $("input[id^='name']").attr('disabled', 'disabled');
+                $("input[id^='code']").attr('disabled', 'disabled');
+                $("input[id='name1']").removeAttr('disabled');
+                $("input[id='code1']").removeAttr('disabled');
+            } else {
+                $("input[id^='name']").removeAttr('disabled');
+                $("input[id^='code']").removeAttr('disabled');
+                //$("input[id='name1']").val('view').attr('readonly', 'readonly');
+                //$("input[id='code1']").val('view').attr('readonly', 'readonly');
+               
+            }
+            $('#menu_edit').show().dialog({
+                title: '编辑菜单功能',
+                iconCls: 'pic pic_95',
+                closable: true,
+                width: 600,
+                height: 400,
+                closed: false,
+                cache: false,
+                modal: true,
+                resizable: false,
+                buttons: [
+                        {
+                            text: '确定',
+                            iconCls: 'pic pic_123',
+                            handler: function () {
+                                if ($('#frm').form('validate')) {
+                                    var data = $('#frm').serialize();
+                                    $('#frm').block({
+                                        message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;正在处理数据，请稍候...</div>'
+                                    });
+                                    $.post(
+                                    '/SystemManage/EditMenuFun',
+                                    data,
+                                    function (r) {
+                                        if (r == 'true') {
+                                            $('#frm').unblock();
+                                            parent.$.messager.show({
+                                                title: '提示',
+                                                msg: '保存成功！',
+                                                timeout: 5000,
+                                                showType: 'slide'
+                                            });
+                                            $('#menulist').treegrid('reload');
+                                        } else {
+                                            $('#frm').unblock();
+                                            $.messager.alert('警告', '保存失败！' + r, 'error');
+                                        }
+                                    },
+                                    'text'
+                                    );
+                                    $('#menu_edit').dialog('close');
+                                }
+                            }
+                        }],
+                onOpen: function () {
+                    $('#frm').form('clear');
+                    $('#menuname').val(row.menu_name);
+                    $('#menuid').val(row.id);
+                    var opcode = row.menu_optioncode.split(',');
+                    var opname = row.menu_option.split(',');
+                    
+                    $.each(opcode, function (i, n) {                        
+                            $('#code' +( i+1)).val(n);
+                        
+                    })
+                    $.each(opname, function (i, n) {
+                            $('#name' + (i + 1)).val(n);
+                      
+                    })
+                    $("input[id='name1']").val('查看').attr('readonly', 'readonly');
+                    $("input[id='code1']").val('view').attr('readonly', 'readonly');
+                }
+            });
+        };
+    </script>
+</head>
+<body>
+    <div>
+        <table id="menulist"></table>
+    </div>
+    <div id="menu_edit" style="display: none; overflow: hidden; padding: 4px;">
+        <form id="frm">
+          菜单名称：  <input id="menuname" name="menuname"  />&nbsp;&nbsp;菜单ID：<input id="menuid" name="menuid" />
+            <br />
+            <br/>
+            <table style="border: 2px solid #E0ECFF;border-collapse: collapse;">
+                <tr>
+                    <td style="width: 60px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        功能1：
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        代码： <input type="text" id="code1" name="code1" style="width: 150px;" value="view"  />
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        显示名 ：<input type="text" id="name1" name="name1" style="width: 150px;" value="查看"  />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 60px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        功能2：
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        代码： <input type="text" id="code2" name="code2" style="width: 150px;" />
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        显示名 ：<input type="text" id="name2" name="name2" style="width: 150px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 60px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        功能3：
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        代码： <input type="text" id="code3" name="code3" style="width: 150px;" />
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        显示名 ：<input type="text" id="name3" name="name3" style="width: 150px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 60px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        功能4：
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        代码： <input type="text" id="code4" name="code4" style="width: 150px;" />
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        显示名 ：<input type="text" id="name4" name="name4" style="width: 150px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 60px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        功能5：
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        代码： <input type="text" id="code5" name="code5" style="width: 150px;" />
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        显示名 ：<input type="text" id="name5" name="name5" style="width: 150px;"  />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 60px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        功能6：
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        代码： <input type="text" id="code6" name="code6" style="width: 150px;" />
+                    </td>
+                    <td style="width: 250px;border: 2px solid #E0ECFF;border-collapse: collapse;">
+                        显示名 ：<input type="text" id="name6" name="name6" style="width: 150px;" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

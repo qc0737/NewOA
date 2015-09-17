@@ -10,8 +10,6 @@
     @Styles.Render("~/Content/jquery-easyui-1.4.3/themes/default/css")
     @Styles.Render("~/Content/autek/Style/css")
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/blockUI")
-    @Scripts.Render("~/bundles/homemenu")
     <title></title>
     <script type="text/javascript">
         $(function () {
@@ -19,14 +17,26 @@
                 url: '/SystemManage/GetAuthoritys',
                 editable: false,
                 valueField: 'auth_id',
-                textField: 'auth_name'
+                textField: 'auth_name',
+                onChange: function (newValue, oldValue) {
+                    $('input[name^="cb_"]').prop('checked', false);
+                    $.post(
+                       '/SystemManage/GetMenu2Auth?id=' + newValue,
+                       function (r) {
+                           $(r).each(function (i, n) {
+                               $('input[name="' + n.menu_options + '"]').prop('checked', true);
+                           });
+                           },                       
+                       'json'
+                       );
+                }
             });
-            $('#filelist').treegrid({
+            $('#menugrid').treegrid({
                 nowrap: true,
                 rownumbers: true,
                 height: 800,
-                url: '/SystemManage/GetMenu2Auth',
-                idField: 'menu_id',
+                url: '/SystemManage/GetMenu2AuthTG',
+                idField: 'id',
                 treeField: 'menu_name',
                 columns: [[
                             {
@@ -38,11 +48,20 @@
                              {
                                  title: '菜单权限',
                                  field: 'menu_option',
-                                 width: 400
+                                 width: 500
                                  //,
                                  //formatter: function (value, row, index) {
                                  //    return '<input type="checkbox" id="c_' + value + '" name="c_' + value + '" onclick=""></checkbox>';
                                  //}
+                             },
+                             {
+                                 title: '快捷操作',
+                                 field: 'id',
+                                 width: 100,
+                                 align: 'center',
+                                 formatter: function (value, row, index) {
+                                     return '[<a href="javascript:selall(' + value + ')">全选</a>][<a href="javascript:notall(' + value + ')">不选</a>]';
+                                 }
                              }
 
                 ]]
@@ -50,6 +69,13 @@
             });
             $('.datagrid-header div').css('text-align', 'center');
         });
+        function selall(id) {
+            $('input[name^="cb_'+id+'_"]').prop('checked', true);
+        }
+        function notall(id) {
+            $('input[name^="cb_' + id + '_"]').prop('checked', false);
+        }
+
         function subauth() {
             var auth_id = $('#auth').combobox('getValue');
             if (auth_id == '') {
@@ -61,28 +87,33 @@
                 });
                 return;
             }
-            var _checked = $('input[name*="ck_"]:checked');
+            var _checked = $('input[name*="cb_"]:checked');
             var param = '';
             $(_checked).each(function () {
                 param = param + this.name+ ',';
             });
-            parent.$.blockUI({
-                message: '<table><tr><td><img src="../../Contents/Images/loading2.gif"/> </td><td>&nbsp;&nbsp;正在处理数据，请稍候... </td></tr></table>',
-                css: { border: '2px solid #6599CC', width: '220px', font: '微软雅黑 11px #6599CC' }, timeout: 5000
-            });
-
+            if (param.length < 1) {
+                parent.$.messager.show({
+                    title: '提示',
+                    msg: '没有选择菜单项！',
+                    timeout: 5000,
+                    showType: 'slide'
+                });
+                return;
+            }
+            parent.loadblock();
             $.post(
-           '/SystemManage/xxx',
+           '/SystemManage/SetMenu2Auth',
            {
                menuids: param,
                auth_id: auth_id
            },
            function (r) {
-               if (r == 't') {
+               if (r >0) {
                    parent.$.unblockUI();
                    parent.$.messager.show({
                        title: '提示',
-                       msg: '已提交！',
+                       msg: '保存成功！',
                        timeout: 5000,
                        showType: 'slide'
                    });
@@ -94,6 +125,29 @@
            'text'
            );
         };
+
+        function checkpid(id) {           
+            var childs = $('#menugrid').treegrid('getChildren', id);           
+            if (childs.length > 0) {                
+                if ($('#cb_' + id+'_view').is(':checked')){                   
+                    for (var i = 0; i < childs.length; i++) {                        
+                        $('#cb_' + childs[i].id + '_view').prop('checked', true);
+                        $('cb_1012_view').prop('checked', true);
+                    }
+                } else {
+                    for (var i = 0; i < childs.length; i++) {
+                        $('#cb_' + childs[i].id + '_view').removeAttr('checked');
+                    }
+                }
+            }
+                var parentrow = $('#menugrid').treegrid('getParent', id);
+               
+                if (parentrow != null) {
+                    if (!$('#cb_' + parentrow.id + '_view').is(':checked')) {
+                        $('#cb_' + parentrow.id + '_view').prop('checked', true);
+                    }
+                }
+        };
     </script>
 </head>
 <body>
@@ -102,8 +156,9 @@
     </div>
     <br />
     <div>
-        <table id="filelist"></table>
+        <table id="menugrid"></table>
        
     </div>
+    
 </body>
 </html>

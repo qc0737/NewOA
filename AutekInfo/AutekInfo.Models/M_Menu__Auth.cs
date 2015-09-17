@@ -6,7 +6,7 @@ namespace AutekInfo.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class M_Menu__Auth
+    public partial class M_Menu_Auth
     {
         [Key]
         public int m_menu_auth_id { get; set; }

@@ -17,7 +17,7 @@ namespace AutekInfo.Models
         public virtual DbSet<Emp_Roles> Emp_Roles { get; set; }
         public virtual DbSet<Global_Config> Global_Config { get; set; }
         public virtual DbSet<M_Emp_PID> M_Emp_PID { get; set; }
-        public virtual DbSet<M_Menu__Auth> M_Menu__Auth { get; set; }
+        public virtual DbSet<M_Menu_Auth> M_Menu_Auth { get; set; }
         public virtual DbSet<M_Role_Auth> M_Role_Auth { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }

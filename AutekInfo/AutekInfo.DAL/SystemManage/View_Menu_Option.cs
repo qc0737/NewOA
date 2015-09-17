@@ -10,54 +10,50 @@ namespace AutekInfo.DAL
 		public partial class View_Menu_Option
 	{
    		     
-		public bool Exists()
-		{
-			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select count(1) from View_Menu_Option");
-			strSql.Append(" where ");
-						SqlParameter[] parameters = {
-			};
-
-			return DbHelperSQL.Exists(strSql.ToString(),parameters);
-		}
+		
 		
 				
 		
 		/// <summary>
 		/// 增加一条数据
 		/// </summary>
-		public void Add(AutekInfo.Model.View_Menu_Option model)
+		public int Add(AutekInfo.Model.View_Menu_Option model)
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("insert into View_Menu_Option(");			
-            strSql.Append("menu_name,option_code,option_name,option_desc,option_id,menu_id,menu_isshow,menu_pid,menu_sort");
+            strSql.Append("menu_name,menu_isshow,menu_option_name,menu_option_code,menu_pid,menu_sort");
 			strSql.Append(") values (");
-            strSql.Append("@menu_name,@option_code,@option_name,@option_desc,@option_id,@menu_id,@menu_isshow,@menu_pid,@menu_sort");            
+            strSql.Append("@menu_name,@menu_isshow,@menu_option_name,@menu_option_code,@menu_pid,@menu_sort");            
             strSql.Append(") ");            
-            		
+            strSql.Append(";select @@IDENTITY");		
 			SqlParameter[] parameters = {
 			            new SqlParameter("@menu_name", SqlDbType.NVarChar,100) ,            
-                        new SqlParameter("@option_code", SqlDbType.VarChar,50) ,            
-                        new SqlParameter("@option_name", SqlDbType.NVarChar,50) ,            
-                        new SqlParameter("@option_desc", SqlDbType.NVarChar,100) ,            
-                        new SqlParameter("@option_id", SqlDbType.Int,4) ,            
-                        new SqlParameter("@menu_id", SqlDbType.Int,4) ,            
                         new SqlParameter("@menu_isshow", SqlDbType.Bit,1) ,            
+                        new SqlParameter("@menu_option_name", SqlDbType.VarChar,4000) ,            
+                        new SqlParameter("@menu_option_code", SqlDbType.VarChar,4000) ,            
                         new SqlParameter("@menu_pid", SqlDbType.Int,4) ,            
                         new SqlParameter("@menu_sort", SqlDbType.Int,4)             
               
             };
 			            
             parameters[0].Value = model.menu_name;                        
-            parameters[1].Value = model.option_code;                        
-            parameters[2].Value = model.option_name;                        
-            parameters[3].Value = model.option_desc;                        
-            parameters[4].Value = model.option_id;                        
-            parameters[5].Value = model.menu_id;                        
-            parameters[6].Value = model.menu_isshow;                        
-            parameters[7].Value = model.menu_pid;                        
-            parameters[8].Value = model.menu_sort;                        
-			            DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
+            parameters[1].Value = model.menu_isshow;                        
+            parameters[2].Value = model.menu_option_name;                        
+            parameters[3].Value = model.menu_option_code;                        
+            parameters[4].Value = model.menu_pid;                        
+            parameters[5].Value = model.menu_sort;                        
+			   
+			object obj = DbHelperSQL.GetSingle(strSql.ToString(),parameters);			
+			if (obj == null)
+			{
+				return 0;
+			}
+			else
+			{
+				                    
+            	return Convert.ToInt32(obj);
+                                                                  
+			}			   
             			
 		}
 		
@@ -69,40 +65,33 @@ namespace AutekInfo.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("update View_Menu_Option set ");
-			                        
+			                                                
             strSql.Append(" menu_name = @menu_name , ");                                    
-            strSql.Append(" option_code = @option_code , ");                                    
-            strSql.Append(" option_name = @option_name , ");                                    
-            strSql.Append(" option_desc = @option_desc , ");                                    
-            strSql.Append(" option_id = @option_id , ");                                    
-            strSql.Append(" menu_id = @menu_id , ");                                    
             strSql.Append(" menu_isshow = @menu_isshow , ");                                    
+            strSql.Append(" menu_option_name = @menu_option_name , ");                                    
+            strSql.Append(" menu_option_code = @menu_option_code , ");                                    
             strSql.Append(" menu_pid = @menu_pid , ");                                    
             strSql.Append(" menu_sort = @menu_sort  ");            			
-			strSql.Append(" where  ");
+			strSql.Append(" where menu_id=@menu_id ");
 						
 SqlParameter[] parameters = {
-			            new SqlParameter("@menu_name", SqlDbType.NVarChar,100) ,            
-                        new SqlParameter("@option_code", SqlDbType.VarChar,50) ,            
-                        new SqlParameter("@option_name", SqlDbType.NVarChar,50) ,            
-                        new SqlParameter("@option_desc", SqlDbType.NVarChar,100) ,            
-                        new SqlParameter("@option_id", SqlDbType.Int,4) ,            
-                        new SqlParameter("@menu_id", SqlDbType.Int,4) ,            
+			            new SqlParameter("@menu_id", SqlDbType.Int,4) ,            
+                        new SqlParameter("@menu_name", SqlDbType.NVarChar,100) ,            
                         new SqlParameter("@menu_isshow", SqlDbType.Bit,1) ,            
+                        new SqlParameter("@menu_option_name", SqlDbType.VarChar,4000) ,            
+                        new SqlParameter("@menu_option_code", SqlDbType.VarChar,4000) ,            
                         new SqlParameter("@menu_pid", SqlDbType.Int,4) ,            
                         new SqlParameter("@menu_sort", SqlDbType.Int,4)             
               
             };
 						            
-            parameters[0].Value = model.menu_name;                        
-            parameters[1].Value = model.option_code;                        
-            parameters[2].Value = model.option_name;                        
-            parameters[3].Value = model.option_desc;                        
-            parameters[4].Value = model.option_id;                        
-            parameters[5].Value = model.menu_id;                        
-            parameters[6].Value = model.menu_isshow;                        
-            parameters[7].Value = model.menu_pid;                        
-            parameters[8].Value = model.menu_sort;                        
+            parameters[0].Value = model.menu_id;                        
+            parameters[1].Value = model.menu_name;                        
+            parameters[2].Value = model.menu_isshow;                        
+            parameters[3].Value = model.menu_option_name;                        
+            parameters[4].Value = model.menu_option_code;                        
+            parameters[5].Value = model.menu_pid;                        
+            parameters[6].Value = model.menu_sort;                        
             int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
 			{
@@ -118,14 +107,16 @@ SqlParameter[] parameters = {
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public bool Delete()
+		public bool Delete(int menu_id)
 		{
 			
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("delete from View_Menu_Option ");
-			strSql.Append(" where ");
+			strSql.Append(" where menu_id=@menu_id");
 						SqlParameter[] parameters = {
+					new SqlParameter("@menu_id", SqlDbType.Int,4)
 			};
+			parameters[0].Value = menu_id;
 
 
 			int rows=DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
@@ -139,20 +130,40 @@ SqlParameter[] parameters = {
 			}
 		}
 		
+				/// <summary>
+		/// 批量删除一批数据
+		/// </summary>
+		public bool DeleteList(string menu_idlist )
+		{
+			StringBuilder strSql=new StringBuilder();
+			strSql.Append("delete from View_Menu_Option ");
+			strSql.Append(" where ID in ("+menu_idlist + ")  ");
+			int rows=DbHelperSQL.ExecuteSql(strSql.ToString());
+			if (rows > 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 				
 		
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public AutekInfo.Model.View_Menu_Option GetModel()
+		public AutekInfo.Model.View_Menu_Option GetModel(int menu_id)
 		{
 			
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select menu_name, option_code, option_name, option_desc, option_id, menu_id, menu_isshow, menu_pid, menu_sort  ");			
+			strSql.Append("select menu_id, menu_name, menu_isshow, menu_option_name, menu_option_code, menu_pid, menu_sort  ");			
 			strSql.Append("  from View_Menu_Option ");
-			strSql.Append(" where ");
+			strSql.Append(" where menu_id=@menu_id");
 						SqlParameter[] parameters = {
+					new SqlParameter("@menu_id", SqlDbType.Int,4)
 			};
+			parameters[0].Value = menu_id;
 
 			
 			AutekInfo.Model.View_Menu_Option model=new AutekInfo.Model.View_Menu_Option();
@@ -160,19 +171,12 @@ SqlParameter[] parameters = {
 			
 			if(ds.Tables[0].Rows.Count>0)
 			{
-																model.menu_name= ds.Tables[0].Rows[0]["menu_name"].ToString();
-																																model.option_code= ds.Tables[0].Rows[0]["option_code"].ToString();
-																																model.option_name= ds.Tables[0].Rows[0]["option_name"].ToString();
-																																model.option_desc= ds.Tables[0].Rows[0]["option_desc"].ToString();
-																												if(ds.Tables[0].Rows[0]["option_id"].ToString()!="")
-				{
-					model.option_id=int.Parse(ds.Tables[0].Rows[0]["option_id"].ToString());
-				}
-																																if(ds.Tables[0].Rows[0]["menu_id"].ToString()!="")
+												if(ds.Tables[0].Rows[0]["menu_id"].ToString()!="")
 				{
 					model.menu_id=int.Parse(ds.Tables[0].Rows[0]["menu_id"].ToString());
 				}
-																																																if(ds.Tables[0].Rows[0]["menu_isshow"].ToString()!="")
+																																				model.menu_name= ds.Tables[0].Rows[0]["menu_name"].ToString();
+																																												if(ds.Tables[0].Rows[0]["menu_isshow"].ToString()!="")
 				{
 					if((ds.Tables[0].Rows[0]["menu_isshow"].ToString()=="1")||(ds.Tables[0].Rows[0]["menu_isshow"].ToString().ToLower()=="true"))
 					{
@@ -183,7 +187,9 @@ SqlParameter[] parameters = {
 					model.menu_isshow= false;
 					}
 				}
-																if(ds.Tables[0].Rows[0]["menu_pid"].ToString()!="")
+																				model.menu_option_name= ds.Tables[0].Rows[0]["menu_option_name"].ToString();
+																																model.menu_option_code= ds.Tables[0].Rows[0]["menu_option_code"].ToString();
+																												if(ds.Tables[0].Rows[0]["menu_pid"].ToString()!="")
 				{
 					model.menu_pid=int.Parse(ds.Tables[0].Rows[0]["menu_pid"].ToString());
 				}
