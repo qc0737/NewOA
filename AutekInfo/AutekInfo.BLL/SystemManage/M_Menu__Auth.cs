@@ -150,9 +150,9 @@ namespace AutekInfo.BLL {
 #endregion
 
         #region extend
-        public int AddModleList(List<Model.M_Menu_Auth> list)
+        public int AddModelList(List<Model.M_Menu_Auth> list)
         {
-            return dal.AddModleList(list);
+            return dal.AddModelList(list);
         }
         #endregion
     }

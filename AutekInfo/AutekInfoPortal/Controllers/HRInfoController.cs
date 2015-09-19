@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using AutekInfo;
 namespace AutekInfoPortal.Controllers
 {
+    [AutekInfoPortal.App_Start.Authorization]
     public class HRInfoController : Controller
     {
         //

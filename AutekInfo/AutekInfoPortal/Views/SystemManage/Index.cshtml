@@ -84,14 +84,14 @@
                     handler: function () {
                         if ($('#frmdept').form('validate') && $('#d_pid').combobox('getText') != '-请选择-') {
                             $('#window_dept').block({
-                                message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;正在处理数据，请稍候...</div>'
+                                message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;请稍候...</div>'
                             });
                             $.post(
                             '/SystemManage/AddDept',
                             $("#frmdept").serialize(),
                             function (r) {
                                 if (r >0) {
-                                    $('#window_dept').unblock();
+                                    parent.$('#window_dept').unblock();
                                     parent.$.messager.show({
                                         title: '提示',
                                         msg: '增加成功！',
@@ -141,7 +141,7 @@
             $.messager.confirm('提示', '确定要删除吗？', function (r) {
                 if (r) {
                     $.blockUI({
-                        message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;正在处理数据，请稍候...</div>'
+                        message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;请稍候...</div>'
                     });
                     $.post(
                 '/SystemManage/DelDept',
@@ -194,7 +194,7 @@
                             }
                             if ($('#frmdept').form('validate')) {
                                 $('#window_dept').block({
-                                    message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;正在处理数据，请稍候...</div>'
+                                    message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;请稍候...</div>'
                                 });
                                 $.post(
                                 '/SystemManage/ChgDept?dept_id=' + node.id,

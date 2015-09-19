@@ -12,6 +12,7 @@ using AutekInfo.Common;
 
 namespace AutekInfoPortal.Controllers
 {
+    [AutekInfoPortal.App_Start.Authorization]
     public class SystemManageController : Controller
     {
         //
@@ -482,7 +483,7 @@ namespace AutekInfoPortal.Controllers
                 m.menu_options=op;
                 list.Add(m);
             }            
-            return b.AddModleList(list);
+            return b.AddModelList(list);
         }
         public string GetMenu2Auth()
         {
@@ -634,6 +635,57 @@ namespace AutekInfoPortal.Controllers
             return "true";
         }
         #endregion
+        #region Auth2Role
+        public ActionResult Auth2Role()
+        {
+            return View();
+        }
+        public string GetAuth2Role()
+        {
+            var b = new AutekInfo.BLL.View_Role_Auths();
+            var list = b.GetModelList("");
+            return JsonConvert.SerializeObject(list);
+            
+        }
+        public string AddAuth2Role()
+        {
+            //System.Threading.Thread.Sleep(5000);
 
+            int role_id = int.Parse(Request["role_id"]);
+            string authids = Request["authids"].Replace("ck_","");
+            var b = new AutekInfo.BLL.M_Role_Auth();
+            authids = authids.Remove(authids.Length - 1, 1);//去掉最后一个逗号
+            string[] arr_ids = authids.Split(',');
+            var list = new List<AutekInfo.Model.M_Role_Auth>();
+            foreach (string id in arr_ids)
+            {
+                var m = new AutekInfo.Model.M_Role_Auth();
+                    m.auth_id = int.Parse(id);
+                    m.role_id = role_id;
+                    list.Add(m);
+            }
+            b.DelAddModelList(list);
+            return "true";
+        }
+        public string EditAuth2Role()
+        {
+
+
+            return "";
+        }
+        public string DelAuth2Role()
+        {
+
+
+            return "";
+        }
+        public string OutputAuth2Role()
+        {
+
+
+            return "";
+        }
+     
+        #endregion
     }
 }

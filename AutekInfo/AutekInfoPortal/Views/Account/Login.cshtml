@@ -1,0 +1,143 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+
+    <link href="~/Content/autek/Style/jquery/account.css" rel="stylesheet" />
+    <script src="~/Content/autek/js/md5.js"></script>
+    @Scripts.Render("~/bundles/jquery")
+    <script type="text/javascript">
+        if (window.top !== window.self) {
+            window.top.location = window.location;
+        }
+        var s = '登录中';
+        var t = 0;
+        $(function () {
+            login();
+
+        });
+
+        function getvcode() {
+            $('#imgcode').attr("src", '/Account/GetValidateCode?t=' + Math.random());
+        }
+        function settt() {
+            if ($('#btn').text().length > 5) {
+                $('#btn').text('登录中');
+            } else {
+                $('#btn').append('.');
+            }
+            
+        };
+        function login() {
+            var userid = $('#userid').val();
+            var enrpwd = hex_md5($('#pwd').val());
+            var vcode = $('#txtvcode').val();
+            if (userid.length < 1 || $('#pwd').val().length < 1) {
+                $('#err').css('visibility', 'visible').empty().append('账号密码不能为空！');
+                return;
+            }
+            if (t > 2 && vcode.length < 1) {
+                $('#err').css('visibility', 'visible').empty().append('请输入验证码！');
+                return;
+            }
+            $('#btn').addClass('button-disable').text('登录中');
+            var intervalId = setInterval("settt()", 450);
+            $.post(
+      '/Account/CheckUser',
+      {
+          userid: userid,
+          enrpwd: enrpwd,
+          vcode: vcode
+      },
+      function (txt) {
+          if (txt == 'true') {
+              window.location = "/Home/index";
+          }
+          else {
+              var r = $.parseJSON(txt);
+              $('#btn').text('登录');
+              clearInterval(intervalId);
+              $('#err').css('visibility', 'visible').empty().append(r.msg);
+              $('#btn').removeClass('button-disable');
+              t = r.count;
+              if (r.count > 2) {
+                  $('#vcode').show();
+              }
+          }
+
+      },
+      'text'
+      );
+        };
+
+    </script>
+</head>
+<body>
+    <div></div>
+    <div class="page-account page-login">
+        <div class="container">
+            <div class="mod-account mod-login login-step-1">
+                <h3>登录</h3>
+                <div class="account-wrap login-wrap">
+                    <ul class="mod-account-progress mod-login-progress">
+                        <li class="progress-1 progress-active">
+                            <p></p>
+                            <i class="triangle triangle-right"></i>
+                            <i class="triangle triangle-bottom"></i>
+                        </li>
+                        <li class="progress-2">
+                            <p></p>
+                            <i class="triangle triangle-top"></i>
+                            <i class="triangle triangle-bottom"></i>
+                            <i class="triangle triangle-right"></i>
+                        </li>
+                        <li class="progress-3">
+                            <p></p>
+                            <i class="triangle triangle-top"></i>
+                            <i class="triangle triangle-right"></i>
+                        </li>
+                    </ul>
+                    <div class="mod-account-content mod-login-content account-content-1 login-content-1">
+                        <p id="err" class="error-tip">用户名或密码不能为空！</p>
+                        <p class="label label-phone">用户名</p>
+                        <div>
+                            <input id="userid" class="phone input-common" type="text" value="quzhch" placeholder="输入您的用户名" />
+                        </div>
+                        <p class="label label-pass">密码</p>
+                        <div>
+                            <input id="pwd" class="password input-common" type="password" value="1111" placeholder="输入您的密码">
+                        </div>
+                        <div id="vcode" class="qcode-wrap" style="display: none">
+                            <p class="label label-qcode">验证码</p>
+                            <div class="clearfix">
+                                <input id="txtvcode" class="input-common half-1 qcode" type="text" placeholder="输入验证码">
+                                <div class="widget-gcode">
+                                    <img id="imgcode" class="code-img" src="/Account/GetValidateCode">
+                                    <a class="btn-refresh" href="javascript:getvcode()"><img id="refresh" src="~/Content/autek/Images/refresh.png" title="点我换一个" />   </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <a class="text-link forget" href="forget.htm">忘记密码？</a>
+                        </div>
+                        <a id="btn" class="button-main" href="javascript:login()">登录</a>
+
+                    </div>
+                    <div class="mod-account-recommend mod-login-recommend">
+                        <i class="right-arrow"></i>
+                        <i class="gift"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+

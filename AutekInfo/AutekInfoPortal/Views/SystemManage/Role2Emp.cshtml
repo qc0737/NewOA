@@ -87,7 +87,7 @@
                                 var role=$('#role_name').combobox('getValue');
                                 if (ids.length > 0 && role.length > 0) {
                                     $('#frm').block({
-                                        message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;正在处理数据，请稍候...</div>'
+                                        message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;请稍候...</div>'
                                     });
                                     $.post(
                                     '/SystemManage/AddEmp2Roles',
@@ -139,7 +139,7 @@
                         }
                         var strIds = ids.join(',');
                         $('#frm').block({
-                            message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;正在处理数据，请稍候...</div>'
+                            message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;请稍候...</div>'
                         });
                         $.post('/SystemManage/DelEmp2Roles?ids=' + strIds, function (r) {
                             if (r == 'true') {

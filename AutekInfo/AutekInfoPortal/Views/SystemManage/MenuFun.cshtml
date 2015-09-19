@@ -60,6 +60,9 @@
         });
         function Edit() {
             var row = $('#menulist').treegrid('getSelected');
+            if (row == null) {
+                return false;
+            }
             var childs = $('#menulist').treegrid('getChildren', row.id);
             if (childs.length > 0) {
                 $("input[id^='name']").attr('disabled', 'disabled');
@@ -91,7 +94,7 @@
                                 if ($('#frm').form('validate')) {
                                     var data = $('#frm').serialize();
                                     $('#frm').block({
-                                        message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;正在处理数据，请稍候...</div>'
+                                        message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;请稍候...</div>'
                                     });
                                     $.post(
                                     '/SystemManage/EditMenuFun',

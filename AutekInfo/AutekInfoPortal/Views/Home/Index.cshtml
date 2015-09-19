@@ -10,94 +10,106 @@
     @Styles.Render("~/Content/autek/Style/css")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/blockUI")
-    @Scripts.Render("~/bundles/homemenu")   
-    <script type="text/javascript">       
-    $(function(){
-        jQuery("#RightAccordion").accordion({ //初始化accordion
-            fillSpace:true,
-            fit:true,
-            border:false
-           // animate:false  
-        });
-        
-        $.post("/Home/GetTopMenu", 
-            { "id": "0" }, //获取第一层目录
-           function (data) {              
-               if (!data) {
-                   window.location = "/Account";
-               }
-               $.each(data, function (i, e) {//循环创建手风琴的项
-                   var id = e.menu_id;
-                   $('#RightAccordion').accordion('add', {
-                       title: '&nbsp;' + e.menu_name,
-                       content: "<ul id='tree" + id + "' style='padding-left:0px;' ></ul>",
-                       selected: true,
-                       iconCls: e.menu_icon
-                   });
-                 //$.parser.parse();
-                   $.post("/Home/GetTreeMenu?menu_pid=" + id,
-                       function (data) {//循环创建树的项                          
-                       $("#tree" + id).tree({
-                           data: data,
-                           onBeforeExpand: function (node, param) {                               
-                             $("#tree" + id).tree('options').url = "/Home/GetTreeMenu?menu_pid=" + node.id;                               
-                           },   
-                           onClick: function (node) {                               
-                               if (node.attributes.length == 0) {
-                                   $(this).tree('toggle', node.target);
-                               } else {
-                                   var tabTitle = node.text;
-                                   var url = node.attributes;
-                                   var icon = node.iconCls;
-                                   addTab(tabTitle, url, icon);
-                               }
-                           }
+    @Scripts.Render("~/bundles/homemenu")
+    
+    <script type="text/javascript">
+        var myDate = new Date();       
+        $(function () {
+            var show_day = new Array('星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日');
+            $('#username').append(myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate() + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + show_day[myDate.getDay() - 1] + '&nbsp;&nbsp;&nbsp;&nbsp;'+'<a href="/Account/Logout">注销</a>');
+            jQuery("#RightAccordion").accordion({ //初始化accordion
+                fillSpace: true,
+                fit: true,
+                border: false
+                // animate:false
+            });
+
+            $.post("/Home/GetTopMenu",
+                { "id": "0" }, //获取第一层目录
+               function (data) {
+                   if (!data) {
+                       window.location = "/Account/login";
+                   }
+                   $.each(data, function (i, e) {//循环创建手风琴的项
+                       var id = e.menu_id;
+                       $('#RightAccordion').accordion('add', {
+                           title: '&nbsp;' + e.menu_name,
+                           content: "<ul id='tree" + id + "' style='padding-left:0px;' ></ul>",
+                           selected: true,
+                           iconCls: e.menu_icon
                        });
-                   }, 'json');
-               });
-           }, "json");
-    });
-    function sall() {
-        $('#dl').datalist('selectAll');
-    }
-    function notall() {
-        $('#dl').datalist('unselectAll');
-    }
-    function selectemp(dept, key) {
-        $('#dl').datalist('load', {
-            emp_dept: dept,
-            keyw: key
+                       //$.parser.parse();
+                       $.post("/Home/GetTreeMenu?menu_pid=" + id,
+                           function (data) {//循环创建树的项
+                               $("#tree" + id).tree({
+                                   data: data,
+                                   onBeforeExpand: function (node, param) {
+                                       $("#tree" + id).tree('options').url = "/Home/GetTreeMenu?menu_pid=" + node.id;
+                                   },
+                                   onClick: function (node) {
+                                       if (node.attributes.length == 0) {
+                                           $(this).tree('toggle', node.target);
+                                       } else {
+                                           var tabTitle = node.text;
+                                           var url = node.attributes;
+                                           var icon = node.iconCls;
+                                           addTab(tabTitle, url, icon);
+                                       }
+                                   }
+                               });
+                           }, 'json');
+                   });
+               }, "json");
+            
+
         });
-    }
+        function sall() {
+            $('#dl').datalist('selectAll');
+        }
+        function notall() {
+            $('#dl').datalist('unselectAll');
+        }
+        function selectemp(dept, key) {
+            $('#dl').datalist('load', {
+                emp_dept: dept,
+                keyw: key
+            });
+        }
     </script>
 
 </head>
 <body class="easyui-layout">
-    <div data-options="region:'north',border:false,split:true" style="height: 60px; overflow:hidden;">
-        <div class="define-head">
-           
-
-                    <img src="~/Content/autek/Images/logo.png" />
-                </div>
+    <div data-options="region:'north',border:false,split:false" style="height: 60px; overflow:hidden;">
+        <div style="float:left;">
+            <img src="~/Content/autek/Images/logo.png" />
+        </div>
+        <div style="float:right; width:400px;height:60px; ">
+            <div style="margin-right:300px; margin-top:40px;  width:16px;height:16px; background-image: url('../Content/autek/Images/CSS Satyr.png'); background-repeat: no-repeat;background-position: -352px -80px;">
 
             </div>
+            <div id="username" style="font-size:15px; margin-top:-18px;padding-left:25px; ">
+                
+                <a>@Session["LoginedUser"]</a>    &nbsp;&nbsp;@Session["role"]  &nbsp;&nbsp;[&nbsp;@Session["emp_dept"]&nbsp;]&nbsp;&nbsp;
+                  </div>
+
+        </div>
     </div>
+
+
+
     <div data-options="region:'west',split:true,title:'&nbsp;&nbsp;菜单列表',iconCls:'pic pic_196'" style=" width: 200px; height:100%;">
         <div id="RightAccordion" class="easyui-accordion">
         </div>
     </div>
-    <div data-options="region:'south',border:false" style="height: 20px;">
-        <div class="define-bottom">
-
-
-        </div>
+    <div data-options="region:'south',border:false" style="height: 15px;overflow:hidden;text-align:center;">
+        &copy;奥杰信息平台
     </div>
-    <div data-options="region:'center',border:false">
+    <div data-options="region:'center',border:false,split:false">
         <div id="mainTab" class="easyui-tabs" data-options="fit:true">
             <div title="我的桌面" data-options="closable:true" style="overflow: hidden; background:#fff">
-              
-                
-                  <iframe scrolling="auto" frameborder="0" src="" style="width: 100%; height: 100%;"></iframe>
+
+
+                <iframe scrolling="auto" frameborder="0" src="" style="width: 100%; height: 100%;"></iframe>
             </div>
         </div>
     </div>

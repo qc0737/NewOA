@@ -11,6 +11,7 @@ using Newtonsoft.Json.Converters;
 
 namespace AutekInfoPortal.Controllers
 {
+    [AutekInfoPortal.App_Start.Authorization]
     public class HomeController : Controller
     {
         public static List<AutekInfo.Model.Menu> list_all = new AutekInfo.BLL.Menu().GetModelList(" menu_isshow=1 ");

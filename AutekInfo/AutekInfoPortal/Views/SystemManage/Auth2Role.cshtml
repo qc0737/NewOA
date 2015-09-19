@@ -1,0 +1,201 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/jquery-easyui-1.4.3/themes/default/css")
+    @Styles.Render("~/Content/autek/Style/css")
+    @Scripts.Render("~/bundles/jquery")
+
+
+    <title></title>
+    <script type="text/javascript">
+        $(function () {
+            $('#auth2role').datagrid({
+                url: '/SystemManage/GetAuth2Role',
+                rownumbers: true,
+                toolbar: '#toobar',
+                singleSelect:true,
+                columns: [[
+                
+                 {
+                     field: 'role_code',
+                     title: '角色代码',
+                     align: 'left',
+                     width: 100, sortable: true
+                 },
+                {
+                    field: 'role_name',
+                    title: '角色名',
+                    align: 'left',
+                    width: 100, sortable: true
+                },
+                {
+                    field: 'authnames',
+                    title: '权限',
+                    align: 'left',
+                    width: 500
+                }
+                ]],
+                sortName: 'role_code',
+                fit: true,
+                fitColumns: true,
+                idField: 'role_id',
+                nowrap: true,
+                sortOrder: 'asc',
+                fitColumns: false
+            });
+            $('.datagrid-header div').css('text-align', 'center');
+        });
+        function setauth2role() {
+            var row = $('#auth2role').datagrid('getSelected');
+            if (row == null) {
+                return false;
+            }
+            $('#setauth2role').show().dialog({
+                title: '分配权限',
+                iconCls: 'pic pic_34',
+                closable: true,
+                width: 500,
+                height: 300,
+                closed: false,
+                cache: false,
+                modal: true,
+                resizable: false,
+                buttons: [
+                        {
+                            text: '确定',
+                            iconCls: 'pic pic_123',
+                            handler: function () {
+                                var authids = '';
+                                $.each($('#seleauth input:checked'), function (i, n) {
+                                    authids = authids + n.id+',';
+                               })
+                                if (authids.length > 0) {
+                                    $('#frm').block({
+                                        message: '<div style="vertical-align:middle;height:35px; line-height:35px; "><img style="vertical-align:middle;"  src="../../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;请稍候...</div>'
+                                    });
+                                    $.post(
+                                    '/SystemManage/AddAuth2Role',
+                                    {
+                                        role_id: row.role_id,
+                                        authids: authids
+                                    },
+                                    function (r) {
+                                        if (r =='true') {
+                                            $('#frm').unblock();                                            
+                                            parent.$.messager.show({
+                                                title: '提示',
+                                                msg: '保存成功！',
+                                                timeout: 5000,
+                                                showType: 'slide'
+                                            });
+                                            $('#setauth2role').dialog('close');
+                                            $('#auth2role').datagrid('reload');
+                                        } else {
+                                            $('#frm').unblock();
+                                            $('#setauth2role').dialog('close');
+                                            $.messager.alert('警告', '保存失败！' + r, 'error');
+                                        }
+                                    },
+                                    'text'
+                                    );
+                                    
+                                } else {
+                                    $.messager.alert('警告', '角色和权限都不能为空！', 'error');
+                                }
+                            }
+                        }],
+                onOpen: function () {
+                    $('#selrole').empty().append(row.role_name);
+                    $.post(
+                        '/SystemManage/GetAuthoritys',
+                        function (r) {
+                            $('#seleauth').empty();
+                            $.each(r, function (i, n) {
+                                $('#seleauth').append('<input type="checkbox" id="ck_' + n.auth_id + '" name="ck_' + n.auth_id + '" />' + n.auth_name+'</br>');
+                            })
+                            var authid = row.authids.split(',')
+                            $.each(authid, function (i, n) {
+                                $('input[name="ck_' + n + '"]').prop('checked', true);
+                            })
+                        },'json'
+                        )
+                    
+                }
+            });
+        };
+        
+        function reload() {
+            $('#auth2role').datagrid('reload');
+            $('#auth2role').datagrid('clearSelections');
+        };
+        function output() {
+            window.location.href = '/SystemManage/OutPutEmp2Roles';
+
+        };
+        function cancel() {
+            $('#auth2role').datagrid('clearSelections');
+        }
+      
+    </script>
+</head>
+<body>
+    <div id="toobar" style="border:none;">
+        
+        <div style="float: left;">
+            <a href="javascript:setauth2role()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_95">设置</a>
+        </div>
+        <div class="datagrid-btn-separator"></div>
+        <div style="float: left;">
+            <a href="javascript:del()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_36">删除</a>
+        </div>
+        <div class="datagrid-btn-separator"></div>
+        <div style="float: left;">
+            <a href="javascript:cancel()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_118">取消选择</a>
+        </div>
+        <div class="datagrid-btn-separator"></div>
+        <div style="float: left;">
+            <a href="javascript:reload()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_203">刷新</a>
+        </div>
+        <div class="datagrid-btn-separator"></div>
+        <div style="float: left;">
+            <a href="javascript:output()" class="easyui-linkbutton" data-options="plain:true" icon="pic pic_202">导出</a>
+        </div>
+        <div style="float: right;padding-top:5px;">
+            <input id="ssss" class="easyui-searchbox" style="width:200px;float:right;" data-options="searcher:'',prompt:'输入关键字查询'" />
+        </div>
+    </div>
+    <table id="auth2role"></table>
+    <div id="setauth2role" style="display: none; overflow: hidden; padding: 2px;">
+        <form id="frm">
+            <table>
+                <tr>
+                    <td style="width: 100px;">
+                        选择角色：
+                    </td>
+                    <td id="selrole" style="width: 260px;">
+                       
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 100px;">
+                        选择权限：
+                    </td>
+                    <td id="seleauth" style="width: 280px;">
+                       
+
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+    </div>
+
+
+</body>
+</html>

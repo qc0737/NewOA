@@ -101,7 +101,10 @@
                 });
                 return;
             }
-            parent.loadblock();
+            $.blockUI({
+                message: '<div style="vertical-align:middle;height:35px;line-height:35px; "><img style="vertical-align:middle;"  src="../../Content/autek/Images/loading.gif"/>&nbsp;&nbsp;请稍候...</div>', timeout: 5000
+
+            });
             $.post(
            '/SystemManage/SetMenu2Auth',
            {
@@ -110,7 +113,7 @@
            },
            function (r) {
                if (r >0) {
-                   parent.$.unblockUI();
+                   $.unblockUI();
                    parent.$.messager.show({
                        title: '提示',
                        msg: '保存成功！',
@@ -118,7 +121,7 @@
                        showType: 'slide'
                    });
                } else {
-                   parent.$.unblockUI();
+                   $.unblockUI();
                    $.messager.alert('警告', '提交失败！' + r, 'error');
                }
            },

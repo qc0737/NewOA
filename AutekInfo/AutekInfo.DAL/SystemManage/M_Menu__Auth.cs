@@ -220,7 +220,7 @@ namespace AutekInfo.DAL
 
 
         #region extend
-        public int AddModleList(List<Model.M_Menu_Auth> list)
+        public int AddModelList(List<Model.M_Menu_Auth> list)
         {
             StringBuilder strSql = new StringBuilder();
             foreach (Model.M_Menu_Auth m in list)

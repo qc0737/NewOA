@@ -11,10 +11,10 @@ namespace AutekInfoPortal
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                       "~/Content/jquery-easyui-1.4.3/jquery.js",
                       "~/Content/jquery-easyui-1.4.3/jquery.easyui.js",
-                     "~/Content/jquery-easyui-1.4.3/locale/easyui-lang-zh_CN.js"));
+                     "~/Content/jquery-easyui-1.4.3/locale/easyui-lang-zh_CN.js",
+                     "~/Content/autek/js/jquery.blockUI.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/blockUI").Include(
-                      "~/Content/autek/js/jquery.blockUI.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/homemenu").Include(
                       "~/Content/autek/js/homemenu.js"));
 
